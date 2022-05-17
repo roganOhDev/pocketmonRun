@@ -1,7 +1,7 @@
 import os
 
 CURRENT_PATH = os.path.dirname(__file__)  # 현재 파일의 위치 반환
-IMAGE_ROOT_PATH = os.path.join(CURRENT_PATH, "images/")
+IMAGE_ROOT_PATH = os.path.join(CURRENT_PATH, "../images/")
 
 
 class Bounus:
@@ -31,7 +31,7 @@ class Item:
     health_potion_item = IMAGE_ROOT_PATH + "health_potion_item.png"
 
 
-class Background:
+class BackgroundImage:
     bonus_stage_background = IMAGE_ROOT_PATH + "bonus_stage_background.png"
     default_background = IMAGE_ROOT_PATH + "default_background.png"
     floor = IMAGE_ROOT_PATH + "floor.png"
@@ -42,8 +42,8 @@ class Obstacle:
     single_jump_obstacle_2 = IMAGE_ROOT_PATH + "single_jump_obstacle_2.png"
     double_jump_obstacle_1 = IMAGE_ROOT_PATH + "double_jump_obstacle_1.png"
     double_jump_obstacle_2 = IMAGE_ROOT_PATH + "double_jump_obstacle_2.png"
-    slide_obstacle_1.png = IMAGE_ROOT_PATH + "slide_obstacle_1.png"
-    slide_obstacle_2.png = IMAGE_ROOT_PATH + "slide_obstacle_2.png"
+    slide_obstacle_1 = IMAGE_ROOT_PATH + "slide_obstacle_1.png"
+    slide_obstacle_2 = IMAGE_ROOT_PATH + "slide_obstacle_2.png"
 
 
 class Squirtle:
