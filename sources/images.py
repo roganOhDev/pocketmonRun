@@ -4,7 +4,7 @@ CURRENT_PATH = os.path.dirname(__file__)  # 현재 파일의 위치 반환
 IMAGE_ROOT_PATH = os.path.join(CURRENT_PATH, "../images/")
 
 
-class Bounus:
+class BonusImage:
     B = IMAGE_ROOT_PATH + "B.png"
     O = IMAGE_ROOT_PATH + "O.png"
     N = IMAGE_ROOT_PATH + "N.png"
@@ -18,17 +18,18 @@ class Bounus:
     S_transparency = IMAGE_ROOT_PATH + "S_transparency.png"
 
 
-class Coin:
+class CoinImage:
     bronze = IMAGE_ROOT_PATH + "bronze_coin.pgn"
     silver = IMAGE_ROOT_PATH + "silver_coin.pgn"
     gold = IMAGE_ROOT_PATH + "gold_coin.pgn"
 
 
-class Item:
-    boost_item = IMAGE_ROOT_PATH + "boost_item.png"
-    giant_item = IMAGE_ROOT_PATH + "giant_item.png"
-    boost_item = IMAGE_ROOT_PATH + "boost_item.png"
-    health_potion_item = IMAGE_ROOT_PATH + "health_potion_item.png"
+class ItemImage:
+    boost = IMAGE_ROOT_PATH + "boost_item.png"
+    giant = IMAGE_ROOT_PATH + "giant_item.png"
+    revive = IMAGE_ROOT_PATH + "revive_item.png"
+    # TODO revive item 못받음
+    health = IMAGE_ROOT_PATH + "health_potion_item.png"
 
 
 class BackgroundImage:

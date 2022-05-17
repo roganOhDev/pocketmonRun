@@ -15,3 +15,11 @@ class Flame(Skill):
         self.image2 = Charmander.charmander_skill_2
         self.time = 5
         self.delay = 10
+
+    def get_width(self) -> int:
+        return self.current_image.get_width()
+
+    def get_height(self) -> int:
+        return self.current_image.get_height()
+
+# TODO 불에 맞춰서 width, height 리턴해야함
