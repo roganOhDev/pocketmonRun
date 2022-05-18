@@ -17,12 +17,12 @@ class Main:
     def main(self) -> None:
         self.init_game()
         self.game.start_game()
+
         while self.is_run:
             self.game.time.clock.tick(self.game.time.fps)
             # for event in (pygame.event.get()):
             #     if event.type == pygame.KEYDOWN:
         pygame.quit()
-
 
 
 if __name__ == "__main__":

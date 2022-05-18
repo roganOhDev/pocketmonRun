@@ -10,6 +10,6 @@ class Charmander(Character):
         super().__init__(image1_path, skill)
 
         self.type = CharacterType.CHARMANDER
-        self.image1 = CharmanderImage.image1
-        self.image2 = CharmanderImage.image2
+        self.image1 = CharmanderImage.image_1
+        self.image2 = CharmanderImage.image_2
         self.skill = skill

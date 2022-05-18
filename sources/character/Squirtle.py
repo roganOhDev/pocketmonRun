@@ -11,6 +11,6 @@ class Squirtle(Character):
         super().__init__(image1_path, skill)
 
         self.type = CharacterType.SQUIRTLE
-        self.image1 = SquirtleImage.image1
-        self.image2 = SquirtleImage.image2
+        self.image1 = SquirtleImage.image_1
+        self.image2 = SquirtleImage.image_2
         self.skill = skill

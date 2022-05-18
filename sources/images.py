@@ -48,8 +48,8 @@ class Obstacle:
 
 
 class SquirtleImage:
-    image1 = IMAGE_ROOT_PATH + "squirtle_1.png"
-    image2 = IMAGE_ROOT_PATH + "squirtle_2.png"
+    image_1 = IMAGE_ROOT_PATH + "squirtle_1.png"
+    image_2 = IMAGE_ROOT_PATH + "squirtle_2.png"
     skill_1 = IMAGE_ROOT_PATH + "squirtle_skill_1.png"
     skill_2 = IMAGE_ROOT_PATH + "squirtle_skill_2.png"
     skill_3 = IMAGE_ROOT_PATH + "squirtle_skill_3.png"

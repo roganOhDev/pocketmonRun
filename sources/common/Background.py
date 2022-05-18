@@ -23,8 +23,20 @@ class Background:
     #     TODO  보너스 화면 만들기 메서드 추가
 
     def show_default_screen(self, screen_width: int, screen_height: int):
-        self.__init__(BackgroundImage.default_background, BackgroundMusic.default, screen_width,
-                      screen_height)
+        if self.bgm.play().get_busy():
+            self.bgm.stop()
+
+        self.__init__(BackgroundImage.default_background, BackgroundMusic.default, screen_width, screen_height)
+
+        self.screen.blit(self.image, (0, 0))
+        pygame.display.update()
+        self.bgm.play(loops=3000)
+
+    def show_bonus_screen(self, screen_width: int, screen_height: int):
+        if self.bgm.play().get_busy():
+            self.bgm.stop()
+
+        self.__init__(BackgroundImage.bonus_stage_background, BackgroundMusic.bonus, screen_width, screen_height)
 
         self.screen.blit(self.image, (0, 0))
         pygame.display.update()
@@ -40,7 +52,7 @@ class Background:
         charmander_image = pygame.image.load(CharmanderImage.image_1).convert()
         charmander_image = pygame.transform.scale(charmander_image, (screen.get_width() / 2, screen.get_height() / 2))
 
-        squirtle_image = pygame.image.load(SquirtleImage.image1).convert()
+        squirtle_image = pygame.image.load(SquirtleImage.image_1).convert()
         squirtle_image = pygame.transform.scale(squirtle_image, (screen.get_width() / 2, screen.get_height() / 2))
 
         bulbasaur_image = pygame.image.load(BulbasaurImage.image_1).convert()

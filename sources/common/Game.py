@@ -60,7 +60,7 @@ class Game:
     @staticmethod
     def create_character(character_type: CharacterType):
         if character_type is CharacterType.SQUIRTLE:
-            return Squirtle(SquirtleImage.image1)
+            return Squirtle(SquirtleImage.image_1)
         elif character_type is CharacterType.CHARMANDER:
             return Charmander(CharmanderImage.image_1)
         elif character_type is CharacterType.BULBASAUR:
