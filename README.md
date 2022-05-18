@@ -15,20 +15,9 @@ https://docs.microsoft.com/ko-kr/visualstudio/python/managing-required-packages-
 
 ## to run
 
---------------
-#### for mac
-```
-cd {root workspace directory}
-```
 
-#### for window
-```
-dir {root workspace directory}
-```
-----------
-```
-python main.py
-```
+run  main.py
+
 
 
 
