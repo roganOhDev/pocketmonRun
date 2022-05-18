@@ -4,7 +4,7 @@
 
 #### for mac
 ```
-cd {root workspace directory}. 
+cd {root workspace directory}
 pip install -r requirements.txt
 ```
 
