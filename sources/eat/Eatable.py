@@ -1,7 +1,7 @@
 import pygame.image
 from pygame import Surface
 
-from sources.Object import Object
+from sources.common.Object import Object
 
 
 class Eatable(Object):

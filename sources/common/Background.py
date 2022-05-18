@@ -4,7 +4,7 @@ import pygame.image
 from pygame.mixer import Sound
 from pygame.surface import Surface
 
-from sources.Text import Text
+from sources.common.Text import Text
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
 from sources.musics import BackgroundMusic
 

@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 import pygame.display
 
-from sources.Background import Background
-from sources.Time import Time
+from sources.common.Background import Background
+from sources.common.Time import Time
 from sources.character.Bulbasaur import Bulbasaur
 from sources.character.Character import Character, CharacterType
 from sources.character.Charmander import Charmander

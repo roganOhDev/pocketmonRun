@@ -1,6 +1,6 @@
 import pygame
 
-from sources.Game import Game
+from sources.common.Game import Game
 
 
 class Main:

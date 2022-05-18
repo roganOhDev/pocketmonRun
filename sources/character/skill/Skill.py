@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pygame
 from pygame.surface import Surface
 
-from sources.Object import Object
+from sources.common.Object import Object
 from sources.character.skill.Type import SkillType
 
 

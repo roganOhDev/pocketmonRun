@@ -1,6 +1,6 @@
 from pygame import Surface
 
-from sources.Object import Object
+from sources.common.Object import Object
 
 
 class Trap(Object):
