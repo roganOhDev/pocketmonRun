@@ -4,11 +4,10 @@ from enum import Enum
 import pygame
 from pygame import Surface
 
-from sources.Object import Object
 from sources.character.CharacterStatus import CharacterStatus
 from sources.character.skill.Health import Health
 from sources.character.skill.Skill import Skill
-from sources.images import Charmander, Squirtle, Bulbasaur, BackgroundImage
+from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
 
 character_x_pos = 3
 
@@ -20,7 +19,7 @@ class CharacterType(Enum):
 
 
 @dataclass
-class Character(Object):
+class Character:
     type: CharacterType
     status: CharacterStatus
     current_image: Surface
@@ -31,12 +30,16 @@ class Character(Object):
     life: float
     x_pos: float
     y_pos: float
+    to_x: float
+    to_y: float
     y_speed: float
 
     floor_height = pygame.image.load(BackgroundImage.floor).get_height()
 
-    def __init__(self, image_path: str, skill: Skill):
-        image = pygame.image.load(image_path)
+    def __init__(self, image1_path: str, skill: Skill):
+        image = pygame.image.load(image1_path)
+        self.to_x = 0
+        self.to_y = 0
         self.x_pos = character_x_pos
         self.y_pos = self.floor_height
         self.y_speed = 0
@@ -82,10 +85,10 @@ class Character(Object):
     def get_slide_image() -> Surface:
         image_path = ""
         if type is CharacterType.CHARMANDER:
-            image_path = Charmander.charmander_slide_1
+            image_path = CharmanderImage.slide_1
         elif type is CharacterType.SQUIRTLE:
-            image_path = Squirtle.squirtle_slide
+            image_path = SquirtleImage.slide
         elif type is CharacterType.BULBASAUR:
-            image_path = Bulbasaur.bulbasaur_slide
+            image_path = BulbasaurImage.slide
 
         return pygame.image.load(image_path)

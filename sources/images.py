@@ -47,25 +47,25 @@ class Obstacle:
     slide_obstacle_2 = IMAGE_ROOT_PATH + "slide_obstacle_2.png"
 
 
-class Squirtle:
-    squirtle_1 = IMAGE_ROOT_PATH + "squirtle_1.png"
-    squirtle_2 = IMAGE_ROOT_PATH + "squirtle_2.png"
-    squirtle_skill_1 = IMAGE_ROOT_PATH + "squirtle_skill_1.png"
-    squirtle_skill_2 = IMAGE_ROOT_PATH + "squirtle_skill_2.png"
-    squirtle_skill_3 = IMAGE_ROOT_PATH + "squirtle_skill_3.png"
-    squirtle_slide = IMAGE_ROOT_PATH + "squirtle_slide.png"
+class SquirtleImage:
+    image1 = IMAGE_ROOT_PATH + "squirtle_1.png"
+    image2 = IMAGE_ROOT_PATH + "squirtle_2.png"
+    skill_1 = IMAGE_ROOT_PATH + "squirtle_skill_1.png"
+    skill_2 = IMAGE_ROOT_PATH + "squirtle_skill_2.png"
+    skill_3 = IMAGE_ROOT_PATH + "squirtle_skill_3.png"
+    slide = IMAGE_ROOT_PATH + "squirtle_slide.png"
 
 
-class Charmander:
-    charmander_1 = IMAGE_ROOT_PATH + "charmander_1.png"
-    charmander_2 = IMAGE_ROOT_PATH + "charmander_2.png"
-    charmander_skill_1 = IMAGE_ROOT_PATH + "charmander_skill_1.png"
-    charmander_skill_2 = IMAGE_ROOT_PATH + "charmander_skill_2.png"
-    charmander_slide_1 = IMAGE_ROOT_PATH + "charmander_slide_1.png"
-    charmander_slide_2 = IMAGE_ROOT_PATH + "charmander_slide_2.png"
+class CharmanderImage:
+    image_1 = IMAGE_ROOT_PATH + "charmander_1.png"
+    image_2 = IMAGE_ROOT_PATH + "charmander_2.png"
+    skill_1 = IMAGE_ROOT_PATH + "charmander_skill_1.png"
+    skill_2 = IMAGE_ROOT_PATH + "charmander_skill_2.png"
+    slide_1 = IMAGE_ROOT_PATH + "charmander_slide_1.png"
+    slide_2 = IMAGE_ROOT_PATH + "charmander_slide_2.png"
 
 
-class Bulbasaur:
-    bulbasaur_1 = IMAGE_ROOT_PATH + "bulbasaur_1.png"
-    bulbasaur_2 = IMAGE_ROOT_PATH + "bulbasaur_2.png"
-    bulbasaur_slide = IMAGE_ROOT_PATH + "bulbasaur_slide.png"
+class BulbasaurImage:
+    image_1 = IMAGE_ROOT_PATH + "bulbasaur_1.png"
+    image_2 = IMAGE_ROOT_PATH + "bulbasaur_2.png"
+    slide = IMAGE_ROOT_PATH + "bulbasaur_slide.png"
