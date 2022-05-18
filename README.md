@@ -16,7 +16,7 @@ https://docs.microsoft.com/ko-kr/visualstudio/python/managing-required-packages-
 ## to run
 
 
-run  main.py
+run 'main.py' which is in {root workspace directory}/sources
 
 
 
