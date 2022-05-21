@@ -64,7 +64,7 @@ class Character:
         if self.motion_count >= 10:
             self.current_image = self.image1 if self.current_image_bool else self.image2
             self.current_image_bool = not self.current_image_bool
-        print(self.motion_count)
+
         self.motion_count = (self.motion_count + 1) % 11
 
     def y_move(self, y_pos: float):

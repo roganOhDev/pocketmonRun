@@ -19,9 +19,9 @@ class BonusImage:
 
 
 class CoinImage:
-    bronze = IMAGE_ROOT_PATH + "bronze_coin.pgn"
-    silver = IMAGE_ROOT_PATH + "silver_coin.pgn"
-    gold = IMAGE_ROOT_PATH + "gold_coin.pgn"
+    bronze = IMAGE_ROOT_PATH + "bronze_coin.png"
+    silver = IMAGE_ROOT_PATH + "silver_coin.png"
+    gold = IMAGE_ROOT_PATH + "gold_coin.png"
 
 
 class ItemImage:

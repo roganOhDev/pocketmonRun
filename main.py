@@ -1,4 +1,6 @@
 from sources.common.Game import Game
+from sources.eat.Coin.Coin import Coin
+from sources.eat.Coin.CoinType import CoinType
 from sources.screen_size import *
 
 
@@ -17,7 +19,13 @@ class Main:
         self.game = Game()
 
     def create_object(self):
+        # trap_num = int(random.randrange(0, 1))
+        # coin = None
+        # if trap_num == 1:
+        coin = Coin(CoinType.GOLD)
+        self.game.background.screen.blit(coin.image, (300 , coin.y_pos))
 
+        return coin
 
     def update(self):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
@@ -26,6 +34,8 @@ class Main:
         self.game.background.screen.blit(floor_image, (0, screen_height - floor_height))
 
         self.game.update_character()
+
+        self.create_object()
 
         pygame.display.update()
 
@@ -40,7 +50,6 @@ class Main:
                 if event.type == pygame.QUIT:
                     self.game_stop()
                 # elif event.type == pygame.KEYDOWN:
-
 
         pygame.quit()
 
