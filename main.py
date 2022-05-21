@@ -18,6 +18,7 @@ class Main:
         self.game = Game()
 
     def update(self):
+        self.game.background.screen.blit(self.game.background.image, (0, 0))
         self.game.update_character()
         pygame.display.update()
 
