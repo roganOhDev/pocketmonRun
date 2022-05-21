@@ -7,6 +7,7 @@ from pygame.surface import Surface
 from sources.common.Text import Text
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
 from sources.musics import BackgroundMusic
+from sources.screen_size import floor_height
 
 
 @dataclass
@@ -14,6 +15,7 @@ class Background:
     screen: Surface
     image: Surface
     bgm: Sound
+    floor: Surface
 
     def __init__(self, image_path: str, bgm_path: str, screen_width: int, screen_height: int):
         self.screen = pygame.display.set_mode((screen_width, screen_height))
@@ -27,8 +29,11 @@ class Background:
             self.bgm.stop()
 
         self.__init__(BackgroundImage.default_background, BackgroundMusic.default, screen_width, screen_height)
-
         self.screen.blit(self.image, (0, 0))
+
+        self.floor = pygame.image.load(BackgroundImage.floor)
+        self.screen.blit(self.floor, (0, screen_height - floor_height))
+
         pygame.display.update()
         self.bgm.play(loops=3000)
 

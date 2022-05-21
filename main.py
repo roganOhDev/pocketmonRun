@@ -1,6 +1,5 @@
-import pygame
-
 from sources.common.Game import Game
+from sources.screen_size import *
 
 
 class Main:
@@ -17,9 +16,17 @@ class Main:
         pygame.init()
         self.game = Game()
 
+    def create_object(self):
+
+
     def update(self):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
+        floor_image = pygame.image.load(BackgroundImage.floor).convert()
+        floor_image = pygame.transform.scale(floor_image, (screen_width, floor_image.get_height()))
+        self.game.background.screen.blit(floor_image, (0, screen_height - floor_height))
+
         self.game.update_character()
+
         pygame.display.update()
 
     def main(self) -> None:

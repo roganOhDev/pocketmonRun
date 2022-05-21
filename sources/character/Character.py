@@ -1,14 +1,13 @@
 from dataclasses import dataclass
 from enum import Enum
 
-import pygame
 from pygame import Surface
 
 from sources.character.CharacterStatus import CharacterStatus
 from sources.character.skill.Health import Health
 from sources.character.skill.Skill import Skill
-from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
-from sources.scrren_size import *
+from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage
+from sources.screen_size import *
 
 character_x_pos = 3
 
@@ -34,8 +33,7 @@ class Character:
     to_x: float
     to_y: float
     y_speed: float
-
-    floor_height = pygame.image.load(BackgroundImage.floor).get_height()
+    motion_count: int
 
     def __init__(self, image1_path: str, skill: Skill):
         image = pygame.image.load(image1_path)
@@ -45,17 +43,29 @@ class Character:
         self.current_image = image
         self.current_image_bool = True
         self.status = CharacterStatus.RUNNING
-        self.y_pos = screen_height - self.floor_height - self.current_image.get_height()
+        self.y_pos = screen_height - floor_height - self.current_image.get_height() + self.fix_y_value(self.type)
         self.y_speed = 0
         self.life = 100
+        self.motion_count = 0
 
         if isinstance(skill, Health):
             self.life *= Health().health_multiply
 
-    def update_motion(self):
-        self.current_image = self.image1 if self.current_image_bool else self.image2
-        self.current_image_bool = not self.current_image_bool
+    @staticmethod
+    def fix_y_value(character_type: CharacterType) -> int:
+        if character_type == CharacterType.CHARMANDER:
+            return 30
+        elif character_type == CharacterType.BULBASAUR:
+            return 17
+        elif character_type == CharacterType.SQUIRTLE:
+            return 45
 
+    def update_motion(self):
+        if self.motion_count >= 10:
+            self.current_image = self.image1 if self.current_image_bool else self.image2
+            self.current_image_bool = not self.current_image_bool
+        print(self.motion_count)
+        self.motion_count = (self.motion_count + 1) % 11
 
     def y_move(self, y_pos: float):
         self.y_pos = y_pos
@@ -69,16 +79,16 @@ class Character:
             self.y_move(self.y_pos + self.y_speed)
             self.y_speed -= 1
 
-        elif self.y_speed < -5 or self.y_pos <= self.floor_height:
+        elif self.y_speed < -5 or self.y_pos <= floor_height:
             self.jump_stop()
 
     def jump_stop(self):
-        self.y_pos = self.floor_height
+        self.y_pos = floor_height
         self.y_speed = 0
         self.status = CharacterStatus.RUNNING
 
     def slide(self):
-        self.y_pos = self.floor_height
+        self.y_pos = floor_height
         self.y_speed = 0
         self.status = CharacterStatus.SLIDING
         self.current_image = self.get_slide_image()

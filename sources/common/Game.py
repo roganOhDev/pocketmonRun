@@ -12,7 +12,8 @@ from sources.eat.Eatable import Eatable
 from sources.images import BackgroundImage, BulbasaurImage, SquirtleImage, CharmanderImage
 from sources.musics import BackgroundMusic
 from sources.character.Character import character_x_pos
-from sources.scrren_size import *
+from sources.screen_size import *
+
 
 @dataclass
 class Game:
