@@ -1,3 +1,5 @@
+import pygame
+
 from sources.character.Character import Character, CharacterType
 from sources.character.skill.Flame import Flame
 from sources.character.skill.Shield import Shield
@@ -11,6 +13,6 @@ class Squirtle(Character):
         super().__init__(image1_path, skill)
 
         self.type = CharacterType.SQUIRTLE
-        self.image1 = SquirtleImage.image_1
-        self.image2 = SquirtleImage.image_2
+        self.image1 = pygame.image.load(SquirtleImage.image_1)
+        self.image2 = pygame.image.load(SquirtleImage.image_2)
         self.skill = skill

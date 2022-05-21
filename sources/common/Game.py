@@ -11,7 +11,8 @@ from sources.character.Squirtle import Squirtle
 from sources.eat.Eatable import Eatable
 from sources.images import BackgroundImage, BulbasaurImage, SquirtleImage, CharmanderImage
 from sources.musics import BackgroundMusic
-
+from sources.character.Character import character_x_pos
+from sources.scrren_size import *
 
 @dataclass
 class Game:
@@ -20,19 +21,19 @@ class Game:
     score: int
     time: Time
     speed: float
-    screen_width: int = 960
-    screen_height: int = 450
 
     def __init__(self):
-        self.background = Background(BackgroundImage.default_background, BackgroundMusic.default, self.screen_width,
-                                     self.screen_height)
+        self.background = Background(BackgroundImage.default_background, BackgroundMusic.default, screen_width,
+                                     screen_height)
         self.time = Time()
         self.speed = 5 / self.time.fps
         self.score = 0
         self.character = self.choose_character()
 
     def start_game(self):
-        self.background.show_default_screen(self.screen_width, self.screen_height)
+        self.background.show_default_screen(screen_width, screen_height)
+        self.background.screen.blit(self.character.current_image, (character_x_pos, self.character.y_pos))
+        pygame.display.update()
 
     def bonus_stage(self, background: Background):
         self.background = background
@@ -40,9 +41,6 @@ class Game:
     def choose_character(self) -> Character:
         self.background.screen.fill(pygame.Color("white"))
         self.background.choose_character_screen(self.background.screen)
-        screen = self.background.screen
-        screen_width = screen.get_width()
-        screen_height = screen.get_height()
 
         while True:
             for event in (pygame.event.get()):
@@ -68,3 +66,7 @@ class Game:
 
     def add_score(self, element: Eatable):
         self.score += element.score
+
+    def update_character(self):
+        self.character.update_motion()
+        self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))

@@ -1,3 +1,5 @@
+import pygame
+
 from sources.character.Character import Character, CharacterType
 from sources.character.skill.Flame import Flame
 from sources.images import CharmanderImage
@@ -10,6 +12,6 @@ class Charmander(Character):
         super().__init__(image1_path, skill)
 
         self.type = CharacterType.CHARMANDER
-        self.image1 = CharmanderImage.image_1
-        self.image2 = CharmanderImage.image_2
+        self.image1 = pygame.image.load(CharmanderImage.image_1)
+        self.image2 = pygame.image.load(CharmanderImage.image_2)
         self.skill = skill

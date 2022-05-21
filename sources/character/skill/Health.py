@@ -1,11 +1,9 @@
-import pygame
-
 from sources.character.skill.Skill import Skill
 from sources.character.skill.Type import SkillType
 
 
 class Health(Skill):
-    health_multiply: 1.3
+    health_multiply: float = 1.3
 
     def __init__(self):
         super().__init__("")

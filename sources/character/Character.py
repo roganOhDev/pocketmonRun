@@ -8,6 +8,7 @@ from sources.character.CharacterStatus import CharacterStatus
 from sources.character.skill.Health import Health
 from sources.character.skill.Skill import Skill
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
+from sources.scrren_size import *
 
 character_x_pos = 3
 
@@ -41,12 +42,12 @@ class Character:
         self.to_x = 0
         self.to_y = 0
         self.x_pos = character_x_pos
-        self.y_pos = self.floor_height
-        self.y_speed = 0
-        self.life = 100
         self.current_image = image
         self.current_image_bool = True
         self.status = CharacterStatus.RUNNING
+        self.y_pos = screen_height - self.floor_height - self.current_image.get_height()
+        self.y_speed = 0
+        self.life = 100
 
         if isinstance(skill, Health):
             self.life *= Health().health_multiply
@@ -54,6 +55,7 @@ class Character:
     def update_motion(self):
         self.current_image = self.image1 if self.current_image_bool else self.image2
         self.current_image_bool = not self.current_image_bool
+
 
     def y_move(self, y_pos: float):
         self.y_pos = y_pos
