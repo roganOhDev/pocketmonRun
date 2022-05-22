@@ -1,11 +1,16 @@
+import random
+
 from sources.common.Game import Game
+from sources.common.Object import Object
 from sources.eat.Coin.Coin import Coin
 from sources.eat.Coin.CoinType import CoinType
-from sources.screen_size import *
+from sources.game_set import *
 
 
 class Main:
     game: Game
+    time_after_create_object: int = 20
+    objects: [Object] = []
     status: bool = True
 
     def is_run(self) -> bool:
@@ -18,14 +23,35 @@ class Main:
         pygame.init()
         self.game = Game()
 
-    def create_object(self):
-        # trap_num = int(random.randrange(0, 1))
-        # coin = None
-        # if trap_num == 1:
-        coin = Coin(CoinType.GOLD)
-        self.game.background.screen.blit(coin.image, (300 , coin.y_pos))
+    def object_init_blit(self, object: Object):
+        self.game.background.screen.blit(object.image, (screen_width - object.image.get_width(), object.y_pos))
 
-        return coin
+    def create_object(self):
+        trap_num = int(random.randrange(0, 4))
+        if trap_num == 0:
+            coin = Coin(CoinType.GOLD)
+            self.objects.append(coin)
+            self.object_init_blit(coin)
+
+        if trap_num == 1:
+            coin = Coin(CoinType.SILVER)
+            self.objects.append(coin)
+            self.object_init_blit(coin)
+
+        if trap_num == 2:
+            coin = Coin(CoinType.BRONZE)
+            self.objects.append(coin)
+            self.object_init_blit(coin)
+
+        if trap_num == 3:
+            self.game.show_bonus_coin(self.objects)
+
+    def move_object(self):
+        for object in self.objects:
+            object.position_update_character_run(object.x_pos - speed)
+            self.game.background.screen.blit(object.image, (object.x_pos, object.y_pos))
+
+        pygame.display.update()
 
     def update(self):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
@@ -35,7 +61,13 @@ class Main:
 
         self.game.update_character()
 
-        self.create_object()
+        if self.time_after_create_object >= 20:
+            self.create_object()
+            self.time_after_create_object = 0
+        else:
+            self.time_after_create_object += 1
+
+        self.move_object()
 
         pygame.display.update()
 
@@ -44,7 +76,7 @@ class Main:
         self.game.start_game()
 
         while self.is_run:
-            self.game.time.clock.tick(self.game.time.fps)
+            self.game.time.clock.tick(fps)
             self.update()
             for event in (pygame.event.get()):
                 if event.type == pygame.QUIT:

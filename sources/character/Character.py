@@ -7,7 +7,7 @@ from sources.character.CharacterStatus import CharacterStatus
 from sources.character.skill.Health import Health
 from sources.character.skill.Skill import Skill
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage
-from sources.screen_size import *
+from sources.game_set import *
 
 character_x_pos = 3
 

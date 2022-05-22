@@ -7,7 +7,7 @@ from pygame.surface import Surface
 from sources.common.Text import Text
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
 from sources.musics import BackgroundMusic
-from sources.screen_size import floor_height
+from sources.game_set import floor_height
 
 
 @dataclass

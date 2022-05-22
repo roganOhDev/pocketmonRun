@@ -5,7 +5,6 @@ from pygame.time import Clock
 
 class Time:
     clock: Clock = Clock()
-    fps: int = 50
     delta_time: int = 0
     prev_time: int = 0
     current_time: int = 0

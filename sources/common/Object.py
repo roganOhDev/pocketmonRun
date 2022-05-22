@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 @dataclass()
 class Object:
+    image: Surface
     x_pos: float
     y_pos: float
 

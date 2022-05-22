@@ -1,5 +1,8 @@
+from typing import Tuple
+
 from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
+from sources.game_set import screen_width
 from sources.images import CoinImage
 
 

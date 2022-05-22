@@ -1,35 +1,41 @@
 from dataclasses import dataclass
+import random
 
 import pygame.display
 
-from sources.common.Background import Background
-from sources.common.Time import Time
 from sources.character.Bulbasaur import Bulbasaur
 from sources.character.Character import Character, CharacterType
+from sources.character.Character import character_x_pos
 from sources.character.Charmander import Charmander
 from sources.character.Squirtle import Squirtle
+from sources.common.Background import Background
+from sources.common.Object import Object
+from sources.common.Time import Time
+from sources.eat.Bonus.Bonus import Bonus
+from sources.eat.Bonus.BonusCoin import BonusCoin
+from sources.eat.Coin.Coin import Coin
+from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
-from sources.images import BackgroundImage, BulbasaurImage, SquirtleImage, CharmanderImage
+from sources.game_set import *
+from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage
 from sources.musics import BackgroundMusic
-from sources.character.Character import character_x_pos
-from sources.screen_size import *
 
 
 @dataclass
 class Game:
     character: Character
     background: Background
+    bonus_count: int
     score: int
     time: Time
-    speed: float
 
     def __init__(self):
         self.background = Background(BackgroundImage.default_background, BackgroundMusic.default, screen_width,
                                      screen_height)
         self.time = Time()
-        self.speed = 5 / self.time.fps
         self.score = 0
         self.character = self.choose_character()
+        self.bonus_count = 0
 
     def start_game(self):
         self.background.show_default_screen(screen_width, screen_height)
@@ -71,3 +77,44 @@ class Game:
     def update_character(self):
         self.character.update_motion()
         self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))
+
+    def show_bonus_coin(self, objects: [Object]) -> [Object]:
+        is_bonus = True if int(random.randrange(0, 4)) == 1 else False
+
+        if is_bonus:
+            if self.bonus_count == 0:
+                letter = Bonus(BonusCoin.B)
+                objects.append(letter)
+                self.bonus_count += 1
+                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+
+            elif self.bonus_count == 1:
+                letter = Bonus(BonusCoin.O)
+                objects.append(letter)
+                self.bonus_count += 1
+                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+
+            elif self.bonus_count == 2:
+                letter = Bonus(BonusCoin.N)
+                objects.append(letter)
+                self.bonus_count += 1
+                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+
+            elif self.bonus_count == 3:
+                letter = Bonus(BonusCoin.U)
+                objects.append(letter)
+                self.bonus_count += 1
+                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+
+            elif self.bonus_count == 4:
+                letter = Bonus(BonusCoin.S)
+                objects.append(letter)
+                self.bonus_count += 1
+                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+
+        else:
+            coin = Coin(CoinType.BRONZE)
+            objects.append(coin)
+            self.background.screen.blit(coin.image, (screen_width - coin.image.get_width(), coin.y_pos))
+
+        return objects
