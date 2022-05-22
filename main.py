@@ -67,9 +67,11 @@ class Main:
         else:
             self.time_after_create_object += 1
 
+        self.game.process_collision(self.objects)
         self.move_object()
 
         pygame.display.update()
+        print(self.game.score)
 
     def main(self) -> None:
         self.init_game()

@@ -51,6 +51,12 @@ class Character:
         if isinstance(skill, Health):
             self.life *= Health().health_multiply
 
+    def get_width(self) -> float:
+        return self.current_image.get_width()
+
+    def get_height(self) -> float:
+        return self.current_image.get_height()
+
     @staticmethod
     def fix_y_value(character_type: CharacterType) -> int:
         if character_type == CharacterType.CHARMANDER:

@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import random
+from dataclasses import dataclass
 
 import pygame.display
 
@@ -18,7 +18,7 @@ from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
 from sources.game_set import *
 from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage
-from sources.musics import BackgroundMusic
+from sources.musics import BackgroundMusic, CoinMusic
 
 
 @dataclass
@@ -28,6 +28,7 @@ class Game:
     bonus_count: int
     score: int
     time: Time
+    is_default_background: bool
 
     def __init__(self):
         self.background = Background(BackgroundImage.default_background, BackgroundMusic.default, screen_width,
@@ -36,6 +37,7 @@ class Game:
         self.score = 0
         self.character = self.choose_character()
         self.bonus_count = 0
+        self.is_default_background = True
 
     def start_game(self):
         self.background.show_default_screen(screen_width, screen_height)
@@ -118,3 +120,30 @@ class Game:
             self.background.screen.blit(coin.image, (screen_width - coin.image.get_width(), coin.y_pos))
 
         return objects
+
+    def process_collision(self, objects: [Object]) -> None:
+        for index, object in enumerate(objects):
+            if self.__is_collision(object):
+                if isinstance(object, Coin) and self.is_default_background:
+                    eat_bgm = pygame.mixer.Sound(CoinMusic.default)
+                    eat_bgm.play()
+                    self.score += object.score
+
+                elif isinstance(object, Coin) and not self.is_default_background:
+                    eat_bgm = pygame.mixer.Sound(CoinMusic.bonus)
+                    eat_bgm.play()
+                    self.score += object.score
+
+                if isinstance(object, Bonus):
+                    eat_bgm = pygame.mixer.Sound(CoinMusic.default)
+                    eat_bgm.play()
+                    self.score += object.score
+
+                objects.pop(index)
+
+    def __is_collision(self, object: Object) -> bool:
+        if self.character.x_pos <= object.x_pos <= self.character.x_pos + self.character.get_width() and \
+                self.character.y_pos <= object.y_pos <= self.character.y_pos + self.character.get_height():
+            return True
+        else:
+            return False
