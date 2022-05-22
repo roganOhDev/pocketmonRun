@@ -17,7 +17,7 @@ from sources.eat.Coin.Coin import Coin
 from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
 from sources.game_set import *
-from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage
+from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage, BonusImage
 from sources.musics import BackgroundMusic, CoinMusic
 
 
@@ -26,6 +26,7 @@ class Game:
     character: Character
     background: Background
     bonus_count: int
+    bonus_eat_count: int
     score: int
     time: Time
     is_default_background: bool
@@ -37,6 +38,7 @@ class Game:
         self.score = 0
         self.character = self.choose_character()
         self.bonus_count = 0
+        self.bonus_eat_count = 0
         self.is_default_background = True
 
     def start_game(self):
@@ -85,34 +87,15 @@ class Game:
 
         if is_bonus:
             if self.bonus_count == 0:
-                letter = Bonus(BonusCoin.B)
-                objects.append(letter)
-                self.bonus_count += 1
-                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
-
+                self.__show_bonus_coin(objects, BonusCoin.B)
             elif self.bonus_count == 1:
-                letter = Bonus(BonusCoin.O)
-                objects.append(letter)
-                self.bonus_count += 1
-                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
-
+                self.__show_bonus_coin(objects, BonusCoin.O)
             elif self.bonus_count == 2:
-                letter = Bonus(BonusCoin.N)
-                objects.append(letter)
-                self.bonus_count += 1
-                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
-
+                self.__show_bonus_coin(objects, BonusCoin.N)
             elif self.bonus_count == 3:
-                letter = Bonus(BonusCoin.U)
-                objects.append(letter)
-                self.bonus_count += 1
-                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
-
+                self.__show_bonus_coin(objects, BonusCoin.U)
             elif self.bonus_count == 4:
-                letter = Bonus(BonusCoin.S)
-                objects.append(letter)
-                self.bonus_count += 1
-                self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+                self.__show_bonus_coin(objects, BonusCoin.S)
 
         else:
             coin = Coin(CoinType.BRONZE)
@@ -137,6 +120,7 @@ class Game:
                 if isinstance(object, Bonus):
                     eat_bgm = pygame.mixer.Sound(CoinMusic.default)
                     eat_bgm.play()
+                    self.bonus_eat_count += 1
                     self.score += object.score
 
                 objects.pop(index)
@@ -147,3 +131,88 @@ class Game:
             return True
         else:
             return False
+
+    def show_current_bonus_collection(self) -> None:
+        if self.bonus_eat_count == 0:
+            B = pygame.image.load(BonusImage.B_transparency).convert()
+            B = pygame.transform.rotozoom(B, 0, 0.2)
+            O = pygame.image.load(BonusImage.O_transparency).convert()
+            O = pygame.transform.rotozoom(O, 0, 0.2)
+            N = pygame.image.load(BonusImage.N_transparency).convert()
+            N = pygame.transform.rotozoom(N, 0, 0.2)
+            U = pygame.image.load(BonusImage.U_transparency).convert()
+            U = pygame.transform.rotozoom(U, 0, 0.2)
+            S = pygame.image.load(BonusImage.S_transparency).convert()
+            S = pygame.transform.rotozoom(S, 0, 0.2)
+
+        elif self.bonus_eat_count == 1:
+            B = pygame.image.load(BonusImage.B).convert()
+            B = pygame.transform.rotozoom(B, 0, 0.2)
+            O = pygame.image.load(BonusImage.O_transparency).convert()
+            O = pygame.transform.rotozoom(O, 0, 0.2)
+            N = pygame.image.load(BonusImage.N_transparency).convert()
+            N = pygame.transform.rotozoom(N, 0, 0.2)
+            U = pygame.image.load(BonusImage.U_transparency).convert()
+            U = pygame.transform.rotozoom(U, 0, 0.2)
+            S = pygame.image.load(BonusImage.S_transparency).convert()
+            S = pygame.transform.rotozoom(S, 0, 0.2)
+
+        elif self.bonus_eat_count == 2:
+            B = pygame.image.load(BonusImage.B).convert()
+            B = pygame.transform.rotozoom(B, 0, 0.2)
+            O = pygame.image.load(BonusImage.O).convert()
+            O = pygame.transform.rotozoom(O, 0, 0.2)
+            N = pygame.image.load(BonusImage.N_transparency).convert()
+            N = pygame.transform.rotozoom(N, 0, 0.2)
+            U = pygame.image.load(BonusImage.U_transparency).convert()
+            U = pygame.transform.rotozoom(U, 0, 0.2)
+            S = pygame.image.load(BonusImage.S_transparency).convert()
+            S = pygame.transform.rotozoom(S, 0, 0.2)
+
+        elif self.bonus_eat_count == 3:
+            B = pygame.image.load(BonusImage.B).convert()
+            B = pygame.transform.rotozoom(B, 0, 0.2)
+            O = pygame.image.load(BonusImage.O).convert()
+            O = pygame.transform.rotozoom(O, 0, 0.2)
+            N = pygame.image.load(BonusImage.N).convert()
+            N = pygame.transform.rotozoom(N, 0, 0.2)
+            U = pygame.image.load(BonusImage.U_transparency).convert()
+            U = pygame.transform.rotozoom(U, 0, 0.2)
+            S = pygame.image.load(BonusImage.S_transparency).convert()
+            S = pygame.transform.rotozoom(S, 0, 0.2)
+
+        elif self.bonus_eat_count == 4:
+            B = pygame.image.load(BonusImage.B).convert()
+            B = pygame.transform.rotozoom(B, 0, 0.2)
+            O = pygame.image.load(BonusImage.O).convert()
+            O = pygame.transform.rotozoom(O, 0, 0.2)
+            N = pygame.image.load(BonusImage.N).convert()
+            N = pygame.transform.rotozoom(N, 0, 0.2)
+            U = pygame.image.load(BonusImage.U).convert()
+            U = pygame.transform.rotozoom(U, 0, 0.2)
+            S = pygame.image.load(BonusImage.S_transparency).convert()
+            S = pygame.transform.rotozoom(S, 0, 0.2)
+
+        elif self.bonus_eat_count == 5:
+            B = pygame.image.load(BonusImage.B).convert()
+            B = pygame.transform.rotozoom(B, 0, 0.2)
+            O = pygame.image.load(BonusImage.O).convert()
+            O = pygame.transform.rotozoom(O, 0, 0.2)
+            N = pygame.image.load(BonusImage.N).convert()
+            N = pygame.transform.rotozoom(N, 0, 0.2)
+            U = pygame.image.load(BonusImage.U).convert()
+            U = pygame.transform.rotozoom(U, 0, 0.2)
+            S = pygame.image.load(BonusImage.S).convert()
+            S = pygame.transform.rotozoom(S, 0, 0.2)
+
+        self.background.screen.blit(B, (200, 15))
+        self.background.screen.blit(O, (230, 15))
+        self.background.screen.blit(N, (260, 15))
+        self.background.screen.blit(U, (290, 15))
+        self.background.screen.blit(S, (320, 15))
+
+    def __show_bonus_coin(self,objects: [Object], bonus_coin: BonusCoin):
+        letter = Bonus(bonus_coin)
+        objects.append(letter)
+        self.bonus_count += 1
+        self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))

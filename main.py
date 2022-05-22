@@ -69,6 +69,7 @@ class Main:
 
         self.game.process_collision(self.objects)
         self.move_object()
+        self.game.show_current_bonus_collection()
 
         pygame.display.update()
         print(self.game.score)
