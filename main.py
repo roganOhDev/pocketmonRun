@@ -1,5 +1,6 @@
 import random
 
+from sources.character.CharacterStatus import CharacterStatus
 from sources.common.Game import Game
 from sources.common.Object import Object
 from sources.eat.Coin.Coin import Coin
@@ -53,7 +54,7 @@ class Main:
 
         pygame.display.update()
 
-    def update(self):
+    def screen_update(self):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
         floor_image = pygame.image.load(BackgroundImage.floor).convert()
         floor_image = pygame.transform.scale(floor_image, (screen_width, floor_image.get_height()))
@@ -61,7 +62,7 @@ class Main:
 
         self.game.update_character()
 
-        if self.time_after_create_object >= 20:
+        if self.time_after_create_object >= 10:
             self.create_object()
             self.time_after_create_object = 0
         else:
@@ -72,19 +73,20 @@ class Main:
         self.game.show_current_bonus_collection()
 
         pygame.display.update()
-        print(self.game.score)
+        # print(self.game.score)
 
     def main(self) -> None:
         self.init_game()
         self.game.start_game()
 
-        while self.is_run:
+        while self.is_run():
             self.game.time.clock.tick(fps)
-            self.update()
+            self.screen_update()
             for event in (pygame.event.get()):
                 if event.type == pygame.QUIT:
                     self.game_stop()
-                # elif event.type == pygame.KEYDOWN:
+                else:
+                    self.game.character.character_operation(event)
 
         pygame.quit()
 
