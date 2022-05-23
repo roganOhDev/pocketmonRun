@@ -49,7 +49,7 @@ class Character:
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
         self.bonus_status = BonusStatus(0, 0, False, False, False, False, False)
         self.y_speed = 0
-        self.life = 5
+        self.life = 100
         self.motion_count = 0
         self.slide_bgm = pygame.mixer.Sound(CharacterMusic.slide)
         self.jump_bgm = pygame.mixer.Sound(CharacterMusic.jump)

@@ -15,7 +15,7 @@ from sources.common.Object import Object
 from sources.common.Text import Text
 from sources.common.Time import Time
 from sources.eat.Bonus.Bonus import Bonus
-from sources.eat.Bonus.BonusCoin import BonusCoin
+from sources.eat.Bonus.BonusCoinType import BonusCoinType
 from sources.eat.Coin.Coin import Coin
 from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
@@ -83,7 +83,7 @@ class Game:
         self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))
 
     def show_bonus_coin(self, objects: [Object]) -> [Object]:
-        is_bonus = True if int(random.randrange(0, 4)) == 1 else False
+        is_bonus = (True if int(random.randrange(0, 4)) == 1 else False) and (not self.has_bonus_coin(objects))
 
         if is_bonus:
             self.__show_bonus_coin(objects, self.character.bonus_status.choose_bonus_coin())
@@ -94,6 +94,13 @@ class Game:
             self.background.screen.blit(coin.image, (screen_width - coin.image.get_width(), coin.y_pos))
 
         return objects
+
+    @staticmethod
+    def has_bonus_coin(objects: [Object]) -> bool:
+        for object in objects:
+            if isinstance(object, Bonus):
+                return True
+        return False
 
     def process_collision(self, objects: [Object]) -> None:
         for index, object in enumerate(objects):
@@ -123,8 +130,8 @@ class Game:
         else:
             return False
 
-    def __show_bonus_coin(self, objects: [Object], bonus_coin: BonusCoin) -> None:
-        if bonus_coin is BonusCoin.FULL:
+    def __show_bonus_coin(self, objects: [Object], bonus_coin: BonusCoinType) -> None:
+        if bonus_coin is BonusCoinType.FULL:
             return
 
         letter = Bonus(bonus_coin)

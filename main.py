@@ -48,9 +48,12 @@ class Main:
             self.game.show_bonus_coin(self.objects)
 
     def move_object(self):
-        for object in self.objects:
+        for index, object in enumerate(self.objects):
             object.position_update_character_run(object.x_pos - speed)
             self.game.background.screen.blit(object.image, (object.x_pos, object.y_pos))
+
+            if object.x_pos < -object.image.get_width():
+                self.objects.pop(index)
 
     def screen_update(self):
         self.game.background.screen.blit(self.game.background.image, (0, 0))

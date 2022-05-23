@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class BonusCoin(Enum):
+class BonusCoinType(Enum):
     B = 1
     O = 2
     N = 3

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pygame import Surface
 
 from sources.common.Text import Text
-from sources.eat.Bonus.BonusCoin import BonusCoin
+from sources.eat.Bonus.BonusCoinType import BonusCoinType
 
 
 @dataclass
@@ -19,30 +19,30 @@ class BonusStatus:
     size: int = 30
     y_pos: int = 20
 
-    def choose_bonus_coin(self) -> BonusCoin:
+    def choose_bonus_coin(self) -> BonusCoinType:
         if not self.B:
-            return BonusCoin.B
+            return BonusCoinType.B
         elif not self.O:
-            return BonusCoin.O
+            return BonusCoinType.O
         elif not self.N:
-            return BonusCoin.N
+            return BonusCoinType.N
         elif not self.U:
-            return BonusCoin.U
+            return BonusCoinType.U
         elif not self.S:
-            return BonusCoin.S
+            return BonusCoinType.S
         else:
-            return BonusCoin.FULL
+            return BonusCoinType.FULL
 
-    def eat_bonus_coin(self, type: BonusCoin) -> None:
-        if type is BonusCoin.B:
+    def eat_bonus_coin(self, type: BonusCoinType) -> None:
+        if type is BonusCoinType.B:
             self.B = True
-        if type is BonusCoin.O:
+        if type is BonusCoinType.O:
             self.O = True
-        if type is BonusCoin.N:
+        if type is BonusCoinType.N:
             self.N = True
-        if type is BonusCoin.U:
+        if type is BonusCoinType.U:
             self.U = True
-        if type is BonusCoin.S:
+        if type is BonusCoinType.S:
             self.S = True
 
     def show_current_bonus_collection(self, screen: Surface) -> None:
