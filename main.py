@@ -69,6 +69,7 @@ class Main:
         self.move_object()
         self.game.character.bonus_status.show_current_bonus_collection(self.game.background.screen)
         self.game.show_score()
+        self.game.show_life()
 
         pygame.display.update()
 

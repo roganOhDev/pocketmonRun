@@ -8,6 +8,8 @@ from sources.character.Character import Character, CharacterType
 from sources.character.Character import character_x_pos
 from sources.character.Charmander import Charmander
 from sources.character.Squirtle import Squirtle
+from sources.character.skill.Health import Health
+from sources.character.skill.Type import SkillType
 from sources.common.Background import Background
 from sources.common.Object import Object
 from sources.common.Text import Text
@@ -18,7 +20,7 @@ from sources.eat.Coin.Coin import Coin
 from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
 from sources.game_set import *
-from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage, BonusImage
+from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage
 from sources.musics import BackgroundMusic, CoinMusic
 
 
@@ -77,6 +79,7 @@ class Game:
 
     def update_character(self):
         self.character.update_motion()
+        self.character.reduce_life()
         self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))
 
     def show_bonus_coin(self, objects: [Object]) -> [Object]:
@@ -120,7 +123,7 @@ class Game:
         else:
             return False
 
-    def __show_bonus_coin(self,objects: [Object], bonus_coin: BonusCoin) -> None:
+    def __show_bonus_coin(self, objects: [Object], bonus_coin: BonusCoin) -> None:
         if bonus_coin is BonusCoin.FULL:
             return
 
@@ -129,5 +132,12 @@ class Game:
         self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
 
     def show_score(self) -> None:
-        score_text = Text(50, 30, 15, str(self.score), (255, 255, 0))
+        score_text = Text(40, 30, 20, str(self.score), (255, 255, 0))
         self.background.screen.blit(score_text.render(), score_text.get_pos())
+
+    def show_life(self) -> None:
+        full_life = 100 if self.character.skill.type is SkillType.TIME else 100 * Health.get_health_mutiply()
+        pygame.draw.rect(self.background.screen, (192, 192, 192), [300, 15, (screen_width / 2) * full_life / 100, 30])
+
+        pygame.draw.rect(self.background.screen, (102, 102, 255),
+                         [300, 20, (screen_width / 2) * self.character.life / 100, 20])

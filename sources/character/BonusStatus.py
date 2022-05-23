@@ -17,6 +17,7 @@ class BonusStatus:
     S: bool
 
     size: int = 30
+    y_pos: int = 20
 
     def choose_bonus_coin(self) -> BonusCoin:
         if not self.B:
@@ -46,29 +47,29 @@ class BonusStatus:
 
     def show_current_bonus_collection(self, screen: Surface) -> None:
         if self.B:
-            b = Text(self.size, 200, 15, "B", (255, 0, 0))
+            b = Text(self.size, 150, self.y_pos, "B", (255, 0, 0))
         else:
-            b = Text(self.size, 200, 15, "B", (108, 108, 108))
+            b = Text(self.size, 150, self.y_pos, "B", (108, 108, 108))
 
         if self.O:
-            o = Text(self.size, 230, 15, "O", (255, 128, 0))
+            o = Text(self.size, 180, self.y_pos, "O", (255, 128, 0))
         else:
-            o = Text(self.size, 230, 15, "O", (108, 108, 108))
+            o = Text(self.size, 180, self.y_pos, "O", (108, 108, 108))
 
         if self.N:
-            n = Text(self.size, 260, 15, "N", (255, 255, 0))
+            n = Text(self.size, 210, self.y_pos, "N", (255, 255, 0))
         else:
-            n = Text(self.size, 260, 15, "N", (108, 108, 108))
+            n = Text(self.size, 210, self.y_pos, "N", (108, 108, 108))
 
         if self.U:
-            u = Text(self.size, 290, 15, "U", (128, 255, 0))
+            u = Text(self.size, 240, self.y_pos, "U", (128, 255, 0))
         else:
-            u = Text(self.size, 290, 15, "U", (108, 108, 108))
+            u = Text(self.size, 240, self.y_pos, "U", (108, 108, 108))
 
         if self.S:
-            s = Text(self.size, 320, 15, "S", (0, 0, 255))
+            s = Text(self.size, 270, self.y_pos, "S", (0, 0, 255))
         else:
-            s = Text(self.size, 320, 15, "S", (108, 108, 108))
+            s = Text(self.size, 270, self.y_pos, "S", (108, 108, 108))
 
         screen.blit(b.render(), b.get_pos())
         screen.blit(o.render(), o.get_pos())

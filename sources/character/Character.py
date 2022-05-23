@@ -79,6 +79,9 @@ class Character:
                 return 52
             return 22
 
+    def reduce_life(self):
+        self.life -= 1/fps
+
     def update_motion(self):
         if self.status is CharacterStatus.RUNNING:
             if self.motion_count >= 10:
