@@ -80,7 +80,7 @@ class Character:
             return 22
 
     def reduce_life(self):
-        self.life -= 1/fps
+        self.life -= 1 / fps
 
     def is_life_remain(self) -> bool:
         return self.life > 0

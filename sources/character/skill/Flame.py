@@ -1,5 +1,3 @@
-import pygame
-
 from sources.character.skill.Skill import Skill
 from sources.character.skill.Type import SkillType
 from sources.images import CharmanderImage

@@ -101,7 +101,6 @@ class Main:
                 else:
                     self.game.character.character_operation(event)
 
-        # TODO 엔딩화면(점수포함)
         self.quit()
 
 

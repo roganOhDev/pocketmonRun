@@ -28,7 +28,6 @@ class ItemImage:
     boost = IMAGE_ROOT_PATH + "boost_item.png"
     giant = IMAGE_ROOT_PATH + "giant_item.png"
     revive = IMAGE_ROOT_PATH + "revive_item.png"
-    # TODO revive item 못받음
     health = IMAGE_ROOT_PATH + "health_potion_item.png"
 
 

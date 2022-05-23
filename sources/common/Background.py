@@ -5,9 +5,9 @@ from pygame.mixer import Sound
 from pygame.surface import Surface
 
 from sources.common.Text import Text
+from sources.game_set import floor_height
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
 from sources.musics import BackgroundMusic
-from sources.game_set import floor_height
 
 
 @dataclass
