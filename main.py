@@ -80,12 +80,15 @@ class Main:
         while self.is_run():
             self.game.time.clock.tick(fps)
             self.screen_update()
+            self.status = self.game.character.is_life_remain()
+
             for event in (pygame.event.get()):
                 if event.type == pygame.QUIT:
                     self.game_stop()
                 else:
                     self.game.character.character_operation(event)
 
+#TODO 엔딩화면(점수포함)
         pygame.quit()
 
 

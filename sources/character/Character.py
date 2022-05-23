@@ -49,7 +49,7 @@ class Character:
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
         self.bonus_status = BonusStatus(0, 0, False, False, False, False, False)
         self.y_speed = 0
-        self.life = 100
+        self.life = 5
         self.motion_count = 0
         self.slide_bgm = pygame.mixer.Sound(CharacterMusic.slide)
         self.jump_bgm = pygame.mixer.Sound(CharacterMusic.jump)
@@ -81,6 +81,9 @@ class Character:
 
     def reduce_life(self):
         self.life -= 1/fps
+
+    def is_life_remain(self) -> bool:
+        return self.life > 0
 
     def update_motion(self):
         if self.status is CharacterStatus.RUNNING:
