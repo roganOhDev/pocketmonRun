@@ -63,7 +63,7 @@ class Main:
 
         self.game.update_character()
 
-        if self.time_after_create_object >= 10:
+        if self.time_after_create_object >= 20:
             self.create_object()
             self.time_after_create_object = 0
         else:
