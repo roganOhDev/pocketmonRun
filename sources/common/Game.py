@@ -10,6 +10,7 @@ from sources.character.Charmander import Charmander
 from sources.character.Squirtle import Squirtle
 from sources.common.Background import Background
 from sources.common.Object import Object
+from sources.common.Text import Text
 from sources.common.Time import Time
 from sources.eat.Bonus.Bonus import Bonus
 from sources.eat.Bonus.BonusCoin import BonusCoin
@@ -119,10 +120,14 @@ class Game:
         else:
             return False
 
-    def __show_bonus_coin(self,objects: [Object], bonus_coin: BonusCoin):
+    def __show_bonus_coin(self,objects: [Object], bonus_coin: BonusCoin) -> None:
         if bonus_coin is BonusCoin.FULL:
             return
 
         letter = Bonus(bonus_coin)
         objects.append(letter)
         self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+
+    def show_score(self) -> None:
+        score_text = Text(50, 30, 15, str(self.score), (255, 255, 0))
+        self.background.screen.blit(score_text.render(), score_text.get_pos())
