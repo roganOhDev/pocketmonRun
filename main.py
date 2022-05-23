@@ -57,9 +57,7 @@ class Main:
 
     def screen_update(self):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
-        floor_image = pygame.image.load(BackgroundImage.floor).convert()
-        floor_image = pygame.transform.scale(floor_image, (screen_width, floor_image.get_height()))
-        self.game.background.screen.blit(floor_image, (0, screen_height - floor_height))
+        self.game.background.floor_update()
 
         self.game.update_character()
 

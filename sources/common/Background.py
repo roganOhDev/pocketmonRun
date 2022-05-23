@@ -4,8 +4,9 @@ import pygame.image
 from pygame.mixer import Sound
 from pygame.surface import Surface
 
+from sources.common.Floor import Floor
 from sources.common.Text import Text
-from sources.game_set import floor_height
+from sources.game_set import floor_height, screen_width, screen_height
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
 from sources.musics import BackgroundMusic
 
@@ -15,12 +16,13 @@ class Background:
     screen: Surface
     image: Surface
     bgm: Sound
-    floor: Surface
+    floors: [Surface]
 
     def __init__(self, image_path: str, bgm_path: str, screen_width: int, screen_height: int):
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.image = pygame.image.load(image_path)
         self.bgm = pygame.mixer.Sound(bgm_path)
+        self.floors = []
 
     #     TODO  보너스 화면 만들기 메서드 추가
 
@@ -31,8 +33,8 @@ class Background:
         self.__init__(BackgroundImage.default_background, BackgroundMusic.default, screen_width, screen_height)
         self.screen.blit(self.image, (0, 0))
 
-        self.floor = pygame.image.load(BackgroundImage.floor)
-        self.screen.blit(self.floor, (0, screen_height - floor_height))
+        self.floors.append(Floor(0))
+        self.floors.append(Floor(screen_width))
 
         pygame.display.update()
         self.bgm.play(loops=3000)
@@ -53,7 +55,7 @@ class Background:
         self.screen.blit(msg, msg_rect)
         pygame.display.update()
 
-    def choose_character_screen(self, screen: Surface) -> Surface:
+    def choose_character_screen(self, screen: Surface) -> None:
         charmander_image = pygame.image.load(CharmanderImage.image_1).convert()
         charmander_image = pygame.transform.scale(charmander_image, (screen.get_width() / 2, screen.get_height() / 2))
 
@@ -73,3 +75,12 @@ class Background:
                            "Click To Choose Character", (black.r, black.g, black.b)))
 
         pygame.display.update()
+
+    def floor_update(self) -> None:
+        for floor in self.floors:
+            floor.move()
+            if floor.x_pos < -screen_width:
+                self.floors.pop(0)
+                self.floors.append(Floor(screen_width))
+
+            self.screen.blit(floor.scaled_image, (floor.x_pos, screen_height - floor_height))
