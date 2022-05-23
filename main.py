@@ -2,6 +2,7 @@ import random
 
 from sources.common.Game import Game
 from sources.common.Object import Object
+from sources.common.Text import Text
 from sources.eat.Coin.Coin import Coin
 from sources.eat.Coin.CoinType import CoinType
 from sources.game_set import *
@@ -73,6 +74,18 @@ class Main:
 
         pygame.display.update()
 
+    def quit(self) -> None:
+        self.game.background.screen.fill(pygame.Color("black"))
+        rendered_text = Text(40, screen_width, screen_height, "Score : {}".format(str(self.game.score)),
+                             (255, 255, 0)).render()
+        self.game.background.screen.blit(rendered_text, Text.get_pos_to_center(rendered_text))
+
+        pygame.display.update()
+
+        self.game.background.bgm.stop()
+        pygame.time.delay(2000)
+        pygame.quit()
+
     def main(self) -> None:
         self.init_game()
         self.game.start_game()
@@ -88,8 +101,8 @@ class Main:
                 else:
                     self.game.character.character_operation(event)
 
-#TODO 엔딩화면(점수포함)
-        pygame.quit()
+        # TODO 엔딩화면(점수포함)
+        self.quit()
 
 
 if __name__ == "__main__":

@@ -4,6 +4,8 @@ import pygame.font
 from pygame import Surface
 from pygame.font import Font
 
+from sources.game_set import screen_width, screen_height
+
 
 class Text:
     font: Font
@@ -24,3 +26,7 @@ class Text:
 
     def get_pos(self) -> Tuple:
         return self.x_pos, self.y_pos
+
+    @staticmethod
+    def get_pos_to_center(rendered_text: Surface):
+        return rendered_text.get_rect(center=(screen_width / 2, screen_height / 2))
