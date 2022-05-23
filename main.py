@@ -1,6 +1,5 @@
 import random
 
-from sources.character.CharacterStatus import CharacterStatus
 from sources.common.Game import Game
 from sources.common.Object import Object
 from sources.eat.Coin.Coin import Coin
@@ -52,8 +51,6 @@ class Main:
             object.position_update_character_run(object.x_pos - speed)
             self.game.background.screen.blit(object.image, (object.x_pos, object.y_pos))
 
-        pygame.display.update()
-
     def screen_update(self):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
         floor_image = pygame.image.load(BackgroundImage.floor).convert()
@@ -70,10 +67,9 @@ class Main:
 
         self.game.process_collision(self.objects)
         self.move_object()
-        self.game.show_current_bonus_collection()
+        self.game.character.bonus_status.show_current_bonus_collection(self.game.background.screen)
 
         pygame.display.update()
-        # print(self.game.score)
 
     def main(self) -> None:
         self.init_game()

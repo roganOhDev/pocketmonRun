@@ -18,3 +18,9 @@ class Text:
         self.y_pos = y_pos
         self.text = text
         self.color = color
+
+    def render(self) -> Surface:
+        return self.font.render(self.text, True, self.color)
+
+    def get_pos(self) -> Tuple:
+        return self.x_pos, self.y_pos

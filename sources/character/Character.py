@@ -6,6 +6,7 @@ from pygame import Surface
 from pygame.event import Event
 from pygame.mixer import Sound
 
+from sources.character.BonusStatus import BonusStatus
 from sources.character.CharacterStatus import CharacterStatus
 from sources.character.skill.Health import Health
 from sources.character.skill.Skill import Skill
@@ -38,6 +39,7 @@ class Character:
     slide_images: [Surface]
     slide_bgm: Sound
     jump_bgm: Sound
+    bonus_status: BonusStatus
 
     def __init__(self, skill: Skill):
         self.x_pos = character_x_pos
@@ -45,6 +47,7 @@ class Character:
         self.current_image_bool = True
         self.status = CharacterStatus.RUNNING
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+        self.bonus_status = BonusStatus(0, 0, False, False, False, False, False)
         self.y_speed = 0
         self.life = 100
         self.motion_count = 0

@@ -7,3 +7,4 @@ class BonusCoin(Enum):
     N = 3
     U = 4
     S = 5
+    FULL = 0
