@@ -13,15 +13,15 @@ class Bulbasaur(Character):
 
         self.type = CharacterType.BULBASAUR
 
-        image1 = pygame.image.load(BulbasaurImage.image_1).convert()
+        image1 = pygame.image.load(BulbasaurImage.image_1).convert_alpha()
         self.image1 = pygame.transform.rotozoom(image1, 0, 0.5)
-        image2 = pygame.image.load(BulbasaurImage.image_2).convert()
+        image2 = pygame.image.load(BulbasaurImage.image_2).convert_alpha()
         self.image2 = pygame.transform.rotozoom(image2, 0, 0.5)
 
         self.skill = skill
 
         self.slide_images = []
-        slide_image = pygame.image.load(BulbasaurImage.slide).convert()
+        slide_image = pygame.image.load(BulbasaurImage.slide).convert_alpha()
         self.slide_images.append(pygame.transform.rotozoom(slide_image, 0, 0.25))
 
         super().__init__(skill)

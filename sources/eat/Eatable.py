@@ -12,7 +12,7 @@ class Eatable(Object):
 
     def __init__(self, image_path: str):
 
-        image = pygame.image.load(image_path).convert()
+        image = pygame.image.load(image_path).convert_alpha()
         self.image = pygame.transform.rotozoom(image, 0, 0.2)
 
         super().__init__(self.image, screen_width - self.image.get_width(),

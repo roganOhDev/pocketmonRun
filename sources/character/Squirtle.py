@@ -13,15 +13,15 @@ class Squirtle(Character):
 
         self.type = CharacterType.SQUIRTLE
 
-        image1 = pygame.image.load(SquirtleImage.image_1).convert()
+        image1 = pygame.image.load(SquirtleImage.image_1).convert_alpha()
         self.image1 = pygame.transform.rotozoom(image1, 0, 0.5)
-        image2 = pygame.image.load(SquirtleImage.image_2).convert()
+        image2 = pygame.image.load(SquirtleImage.image_2).convert_alpha()
         self.image2 = pygame.transform.rotozoom(image2, 0, 0.5)
 
         self.skill = skill
 
         self.slide_images = []
-        slide_image = pygame.image.load(SquirtleImage.slide).convert()
+        slide_image = pygame.image.load(SquirtleImage.slide).convert_alpha()
         self.slide_images.append(pygame.transform.rotozoom(slide_image, 0, 0.8))
 
         super().__init__(skill)
