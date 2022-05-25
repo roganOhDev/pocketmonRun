@@ -9,7 +9,7 @@ class Item(Eatable):
 
     def __init__(self, type: ItemType):
         image_path = self.get_image_path(type)
-        super().__init__(image_path)
+        super().__init__(image_path, 0)
 
         self.score = CoinType.BRONZE.value
         self.type = type

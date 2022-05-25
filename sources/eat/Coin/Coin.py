@@ -1,21 +1,22 @@
-from typing import Tuple
-
 from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
-from sources.game_set import screen_width
 from sources.images import CoinImage
 
 
 class Coin(Eatable):
     type: CoinType
 
-    def __init__(self, type: CoinType):
+    def __init__(self, type: CoinType, y_fix: float):
         image_path = self.__get_image_path(type)
-        super().__init__(image_path)
+        super().__init__(image_path, y_fix)
 
         self.score = self.__get_coin_score(type)
 
         self.type = type
+
+    @staticmethod
+    def create_coin_with_y_pos(y_fix: float):
+        return Coin(CoinType.BRONZE, y_fix)
 
     @staticmethod
     def __get_image_path(type: CoinType) -> str:

@@ -22,6 +22,16 @@ class CharacterType(Enum):
     BULBASAUR = 3
 
 
+class VLC:
+    player = 3
+
+    def __init__(self):
+        self.player = "3421"
+
+    def print(self):
+        print(self.player + 3)
+
+
 @dataclass
 class Character:
     type: CharacterType
@@ -146,12 +156,13 @@ class Character:
             self.run()
 
     def slide(self):
-        if not self.is_jumping():
+        if (not self.is_jumping()) or (
+                self.is_jumping() and self.y_pos > screen_height - floor_height - self.get_height() + self.fix_y_value() - 90 and self.y_speed > 0):
             self.slide_bgm.play()
             self.status = CharacterStatus.SLIDING
+            self.current_image = self.slide_images[0]
             self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
             self.y_speed = 0
-            self.current_image = self.slide_images[0]
             self.motion_count = 0
 
     def character_operation(self, event: Event):

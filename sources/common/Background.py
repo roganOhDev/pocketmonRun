@@ -36,7 +36,6 @@ class Background:
         self.floors.append(Floor(0))
         self.floors.append(Floor(screen_width))
 
-        pygame.display.update()
         self.bgm.play(loops=3000)
 
     def show_bonus_screen(self, screen_width: int, screen_height: int):
@@ -53,7 +52,6 @@ class Background:
         msg = text.font.render(text.text, True, text.color)
         msg_rect = msg.get_rect(center=(text.x_pos, text.y_pos))
         self.screen.blit(msg, msg_rect)
-        pygame.display.update()
 
     def choose_character_screen(self, screen: Surface) -> None:
         charmander_image = pygame.image.load(CharmanderImage.image_1).convert()

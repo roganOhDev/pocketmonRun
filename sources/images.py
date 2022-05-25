@@ -37,7 +37,7 @@ class BackgroundImage:
     floor = IMAGE_ROOT_PATH + "floor.png"
 
 
-class Obstacle:
+class ObstacleImage:
     single_jump_obstacle_1 = IMAGE_ROOT_PATH + "single_jump_obstacle_1.png"
     single_jump_obstacle_2 = IMAGE_ROOT_PATH + "single_jump_obstacle_2.png"
     double_jump_obstacle_1 = IMAGE_ROOT_PATH + "double_jump_obstacle_1.png"
