@@ -168,6 +168,9 @@ class Main:
         self.game.show_score()
         self.game.show_life()
 
+        if not self.is_run():
+            self.quit()
+
         pygame.display.update()
 
     def quit(self) -> None:
@@ -188,8 +191,8 @@ class Main:
 
         while self.is_run():
             self.game.time.clock.tick(fps)
-            self.status = self.game.character.is_life_remain()
             self.screen_update()
+            self.status = self.game.character.is_life_remain()
 
             for event in (pygame.event.get()):
                 if event.type == pygame.QUIT:
@@ -197,8 +200,7 @@ class Main:
                 else:
                     self.game.character.character_operation(event)
 
-            if not self.is_run():
-                self.quit()
+
 
         self.quit()
 
