@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass
 from enum import Enum
 
@@ -10,6 +11,7 @@ from sources.character.BonusStatus import BonusStatus
 from sources.character.CharacterStatus import CharacterStatus
 from sources.character.skill.Health import Health
 from sources.character.skill.Skill import Skill
+from sources.character.skill.Type import SkillType
 from sources.game_set import *
 from sources.musics import CharacterMusic
 
@@ -22,16 +24,6 @@ class CharacterType(Enum):
     BULBASAUR = 3
 
 
-class VLC:
-    player = 3
-
-    def __init__(self):
-        self.player = "3421"
-
-    def print(self):
-        print(self.player + 3)
-
-
 @dataclass
 class Character:
     type: CharacterType
@@ -40,7 +32,6 @@ class Character:
     current_image_bool: bool
     image1: Surface
     image2: Surface
-    skill: Skill
     life: float
     x_pos: float
     y_pos: float
@@ -50,6 +41,8 @@ class Character:
     slide_bgm: Sound
     jump_bgm: Sound
     bonus_status: BonusStatus
+
+    skill: Skill
 
     def __init__(self, skill: Skill):
         self.x_pos = character_x_pos
@@ -114,6 +107,40 @@ class Character:
 
             self.motion_count = (self.motion_count + 1) % 8
 
+    def skill_process(self):
+        if self.skill.type is SkillType.PASSIVE:
+            return
+
+        else:
+            if (not self.skill.is_using) and time.time() - self.skill.skill_end_time >= self.skill.delay:
+                self.start_using_skill()
+
+            elif self.skill.is_using and time.time() - self.skill.skill_start_time < self.skill.time:
+                self.keep_using_skill()
+
+            elif self.skill.is_using and time.time() - self.skill.skill_start_time >= self.skill.time:
+                self.stop_using_skill()
+
+    def start_using_skill(self):
+        if self.status is CharacterStatus.SLIDING:
+            self.slide_bgm.stop()
+            self.status = CharacterStatus.RUNNING
+            self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+
+        self.skill.is_using = True
+        self.skill.update_motion()
+        self.current_image = self.skill.current_image
+        self.skill.skill_start_time = time.time()
+
+    def keep_using_skill(self):
+        self.skill.update_motion()
+        self.current_image = self.skill.current_image
+
+    def stop_using_skill(self):
+        self.skill.is_using = False
+        self.skill.skill_end_time = time.time()
+        self.current_image = self.image1
+
     def choose_slide_image_index(self, num: int) -> int:
         return (len(self.slide_images) - 1) * num
 
@@ -143,7 +170,11 @@ class Character:
                 self.y_pos = screen_height - floor_height - self.get_height()
                 self.status = CharacterStatus.JUMPING
 
-            self.current_image = self.image1
+            if self.skill.is_using:
+                self.current_image = self.skill.images[0]
+            else:
+                self.current_image = self.image1
+
             self.y_speed = -15
             self.motion_count = 0
 
@@ -158,12 +189,15 @@ class Character:
     def slide(self):
         if (not self.is_jumping()) or (
                 self.is_jumping() and self.y_pos > screen_height - floor_height - self.get_height() + self.fix_y_value() - 90 and self.y_speed > 0):
-            self.slide_bgm.play()
-            self.status = CharacterStatus.SLIDING
-            self.current_image = self.slide_images[0]
-            self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+
+            if not self.skill.is_using:
+                self.slide_bgm.play()
+                self.status = CharacterStatus.SLIDING
+                self.current_image = self.slide_images[0]
+                self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+                self.motion_count = 0
+
             self.y_speed = 0
-            self.motion_count = 0
 
     def character_operation(self, event: Event):
         if event.type == pygame.KEYDOWN:

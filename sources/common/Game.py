@@ -10,7 +10,9 @@ from sources.character.Character import Character, CharacterType
 from sources.character.Character import character_x_pos
 from sources.character.Charmander import Charmander
 from sources.character.Squirtle import Squirtle
+from sources.character.skill.Flame import Flame
 from sources.character.skill.Health import Health
+from sources.character.skill.Shield import Shield
 from sources.character.skill.Type import SkillType
 from sources.common.Background import Background
 from sources.common.Object import Object
@@ -83,6 +85,7 @@ class Game:
 
     def update_character(self):
         self.character.update_motion()
+        self.character.skill_process()
         self.character.reduce_life()
         self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))
 
@@ -138,7 +141,11 @@ class Game:
                     objects.pop(index)
 
                 elif isinstance(object, Trap):
-                    self.character.life -= 20
+                    if self.character.skill.is_using and self.__is_collision_with_skill(object, upside_down):
+                        if isinstance(self.character.skill, Flame):
+                            self.score += CoinType.GOLD.value
+                    else:
+                        self.character.life -= 20
                     objects.pop(index)
 
         return True
@@ -155,7 +162,7 @@ class Game:
         object_low = object.y_pos + object.image.get_height()
 
         if self.character.type is CharacterType.SQUIRTLE and isinstance(object, Trap) and upside_down:
-            character_high += 20
+            character_high += 18
 
         elif self.character.type is CharacterType.SQUIRTLE and not isinstance(object, Trap):
             character_high += 3
@@ -186,6 +193,36 @@ class Game:
                     object_left <= character_right - 25) and (
                     character_low - 15 >= object_high):
                 return True
+
+        return False
+
+    def __is_collision_with_skill(self, object: Object, upside_down: bool) -> bool:
+        skill_right = self.character.x_pos + self.character.get_width()
+        skill_left =  skill_right - self.character.skill.get_width()
+        skill_low = self.character.y_pos + self.character.get_height() - 10
+        skill_high = self.character.y_pos + 10
+
+        object_left = object.x_pos
+        object_right = object.x_pos + object.image.get_width()
+        object_high = object.y_pos
+        object_low = object.y_pos + object.image.get_height()
+
+        if isinstance(self.character.skill, Shield):
+            return True
+
+        elif upside_down and (
+                skill_left + 60 <= object_right) and (
+                object_left <= skill_right - 40) and (
+                skill_high + 15 <= object_low):
+            # print("obstacle_low:  " + str(object_low))
+            # print("character_high:  " + str(character_high))
+            return True
+
+        elif not upside_down and (
+                skill_left + 60 <= object_right) and (
+                object_left <= skill_right - 25) and (
+                skill_low - 15 >= object_high):
+            return True
 
         return False
 
