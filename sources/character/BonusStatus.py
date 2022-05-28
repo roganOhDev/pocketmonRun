@@ -8,14 +8,13 @@ from sources.eat.Bonus.BonusCoinType import BonusCoinType
 
 @dataclass
 class BonusStatus:
-    bonus_count: int
-    bonus_eat_count: int
     B: bool
     O: bool
     N: bool
     U: bool
     S: bool
 
+    bonus_eat_count: int = 0
     size: int = 30
     y_pos: int = 20
 
@@ -35,14 +34,19 @@ class BonusStatus:
 
     def eat_bonus_coin(self, type: BonusCoinType) -> None:
         if type is BonusCoinType.B:
+            self.bonus_eat_count += 1
             self.B = True
         if type is BonusCoinType.O:
+            self.bonus_eat_count += 1
             self.O = True
         if type is BonusCoinType.N:
+            self.bonus_eat_count += 1
             self.N = True
         if type is BonusCoinType.U:
+            self.bonus_eat_count += 1
             self.U = True
         if type is BonusCoinType.S:
+            self.bonus_eat_count += 1
             self.S = True
 
     def show_current_bonus_collection(self, screen: Surface) -> None:
@@ -76,4 +80,3 @@ class BonusStatus:
         screen.blit(n.render(), n.get_pos())
         screen.blit(u.render(), u.get_pos())
         screen.blit(s.render(), s.get_pos())
-

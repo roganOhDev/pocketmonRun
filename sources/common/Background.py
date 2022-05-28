@@ -18,34 +18,32 @@ class Background:
     bgm: Sound
     floors: [Surface]
 
-    def __init__(self, image_path: str, bgm_path: str, screen_width: int, screen_height: int):
+    def __init__(self, image_path: str, bgm_path: str):
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.image = pygame.image.load(image_path)
         self.bgm = pygame.mixer.Sound(bgm_path)
         self.floors = []
 
-    #     TODO  보너스 화면 만들기 메서드 추가
-
-    def show_default_screen(self, screen_width: int, screen_height: int):
+    def show_default_screen(self):
         if self.bgm.play().get_busy():
             self.bgm.stop()
 
-        self.__init__(BackgroundImage.default_background, BackgroundMusic.default, screen_width, screen_height)
-        self.screen.blit(self.image, (0, 0))
+        self.__init__(BackgroundImage.default_background, BackgroundMusic.default)
 
         self.floors.append(Floor(0))
         self.floors.append(Floor(screen_width))
 
         self.bgm.play(loops=3000)
 
-    def show_bonus_screen(self, screen_width: int, screen_height: int):
+    def show_bonus_screen(self):
         if self.bgm.play().get_busy():
             self.bgm.stop()
 
-        self.__init__(BackgroundImage.bonus_stage_background, BackgroundMusic.bonus, screen_width, screen_height)
+        self.__init__(BackgroundImage.bonus_stage_background, BackgroundMusic.bonus)
 
-        self.screen.blit(self.image, (0, 0))
-        pygame.display.update()
+        self.floors.append(Floor(0))
+        self.floors.append(Floor(screen_width))
+
         self.bgm.play(loops=3000)
 
     def add_text(self, text: Text):

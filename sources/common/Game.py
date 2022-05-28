@@ -1,8 +1,10 @@
 import random
+import time
 from dataclasses import dataclass
 
 import pygame.display
 
+from sources.character.BonusStatus import BonusStatus
 from sources.character.Bulbasaur import Bulbasaur
 from sources.character.Character import Character, CharacterType
 from sources.character.Character import character_x_pos
@@ -33,20 +35,19 @@ class Game:
     background: Background
     score: int
     time: Time
-    is_default_background: bool
+    is_default_stage: bool
+    bonus_stage_start_time: float
 
     def __init__(self):
-        self.background = Background(BackgroundImage.default_background, BackgroundMusic.default, screen_width,
-                                     screen_height)
+        self.background = Background(BackgroundImage.default_background, BackgroundMusic.default)
         self.time = Time()
         self.score = 0
         self.character = self.choose_character()
-        self.is_default_background = True
+        self.is_default_stage = True
 
     def start_game(self):
-        self.background.show_default_screen(screen_width, screen_height)
+        self.background.show_default_screen()
         self.background.screen.blit(self.character.current_image, (character_x_pos, self.character.y_pos))
-        pygame.display.update()
 
     def bonus_stage(self, background: Background):
         self.background = background
@@ -86,7 +87,7 @@ class Game:
         self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))
 
     def show_bonus_coin(self, objects: [Object]) -> [Object]:
-        is_bonus = (True if int(random.randrange(0, 4)) == 1 else False) and (not self.has_bonus_coin(objects))
+        is_bonus = (True if int(random.randrange(0, 4)) <= 3 else False) and (not self.has_bonus_coin(objects))
 
         if is_bonus:
             self.__show_bonus_coin(objects, self.character.bonus_status.choose_bonus_coin())
@@ -113,29 +114,31 @@ class Game:
                 upside_down = True
 
             if self.__is_collision(object, upside_down):
-                if isinstance(object, Coin) and self.is_default_background:
+                if isinstance(object, Coin) and self.is_default_stage:
                     eat_bgm = pygame.mixer.Sound(CoinMusic.default)
                     eat_bgm.play()
                     self.score += object.score
                     objects.pop(index)
 
-                elif isinstance(object, Coin) and not self.is_default_background:
-                    eat_bgm = pygame.mixer.Sound(CoinMusic.bonus)
+                elif isinstance(object, Coin) and not self.is_default_stage:
+                    if self.is_default_stage:
+                        eat_bgm = pygame.mixer.Sound(CoinMusic.default)
+                        self.score += object.score
+                    else:
+                        eat_bgm = pygame.mixer.Sound(CoinMusic.bonus)
+                        self.score += object.score * 1.8
+
                     eat_bgm.play()
-                    self.score += object.score
                     objects.pop(index)
 
                 elif isinstance(object, Bonus):
                     eat_bgm = pygame.mixer.Sound(CoinMusic.default)
                     eat_bgm.play()
                     self.character.bonus_status.eat_bonus_coin(object.type)
-                    self.score += object.score
                     objects.pop(index)
 
                 elif isinstance(object, Trap):
-                    # return False
-
-                    # for debug
+                    self.character.life -= 20
                     objects.pop(index)
 
         return True
@@ -195,7 +198,7 @@ class Game:
         self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
 
     def show_score(self) -> None:
-        score_text = Text(40, 30, 20, str(self.score), (255, 255, 0))
+        score_text = Text(40, 30, 20, str(int(self.score)), (255, 255, 0))
         self.background.screen.blit(score_text.render(), score_text.get_pos())
 
     def show_life(self) -> None:
@@ -204,3 +207,18 @@ class Game:
 
         pygame.draw.rect(self.background.screen, (102, 102, 255),
                          [300, 20, (screen_width / 2) * self.character.life / 100, 20])
+
+    def bonus_process(self) -> None:
+        if self.character.bonus_status.bonus_eat_count == 5:
+            self.bonus_stage_start_time = time.time()
+            self.character.bonus_status.bonus_eat_count = 6
+            self.is_default_stage = False
+            self.background.show_bonus_screen()
+
+        elif self.character.bonus_status.bonus_eat_count == 6:
+            if time.time() - self.bonus_stage_start_time >= 15:
+                self.character.bonus_status = BonusStatus(False, False, False, False, False)
+                self.character.bonus_status.bonus_eat_count = 0
+                self.background.show_default_screen()
+                self.is_default_stage = True
+
