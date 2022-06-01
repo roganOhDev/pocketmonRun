@@ -7,7 +7,7 @@ from sources.images import CharmanderImage
 
 class Flame(Skill):
 
-    def __init__(self):
+    def __init__(self, game_time: float):
         image1 = pygame.image.load(CharmanderImage.skill_1).convert_alpha()
         image1 = pygame.transform.rotozoom(image1, 0, 0.7)
         image2 = pygame.image.load(CharmanderImage.skill_2).convert_alpha()
@@ -16,7 +16,7 @@ class Flame(Skill):
         slide_image = pygame.transform.rotozoom(slide_image, 0, 0.7)
 
         images = [image1, image2]
-        super().__init__(images)
+        super().__init__(images, game_time)
 
         self.type = SkillType.TIME
         self.time = 5

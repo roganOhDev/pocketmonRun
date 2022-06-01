@@ -7,7 +7,7 @@ from sources.images import SquirtleImage
 
 class Shield(Skill):
 
-    def __init__(self):
+    def __init__(self, game_time: float):
         image1 = pygame.image.load(SquirtleImage.skill_1).convert_alpha()
         image1 = pygame.transform.rotozoom(image1, 0, 0.4)
         image2 = pygame.image.load(SquirtleImage.skill_2).convert_alpha()
@@ -17,7 +17,7 @@ class Shield(Skill):
 
         images = [image1, image2]
 
-        super().__init__(images)
+        super().__init__(images, game_time)
 
         self.type = SkillType.TIME
         self.slide_image = slide_image

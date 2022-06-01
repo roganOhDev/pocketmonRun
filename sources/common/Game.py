@@ -1,5 +1,4 @@
 import random
-import time
 from dataclasses import dataclass
 
 import pygame.display
@@ -26,7 +25,6 @@ from sources.eat.Eatable import Eatable
 from sources.eat.Item.Item import Item
 from sources.eat.Item.ItemType import ItemType
 from sources.game_set import *
-from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage
 from sources.musics import BackgroundMusic, CoinMusic
 from sources.trap.SlideObstacle1 import SlideObstacle1
 from sources.trap.SlideObstacle2 import SlideObstacle2
@@ -42,11 +40,11 @@ class Game:
     is_default_stage: bool
     bonus_stage_start_time: float
 
-    def __init__(self):
+    def __init__(self, game_time: float):
         self.background = Background(BackgroundImage.default_background, BackgroundMusic.default)
         self.time = Time()
         self.score = 0
-        self.character = self.choose_character()
+        self.character = self.choose_character(game_time)
         self.is_default_stage = True
 
     def start_game(self):
@@ -56,7 +54,7 @@ class Game:
     def bonus_stage(self, background: Background):
         self.background = background
 
-    def choose_character(self) -> Character:
+    def choose_character(self, game_time: float) -> Character:
         self.background.screen.fill(pygame.Color("white"))
         self.background.choose_character_screen(self.background.screen)
 
@@ -64,31 +62,32 @@ class Game:
             for event in (pygame.event.get()):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if 0 < event.pos[0] < screen_width / 2 and 0 < event.pos[1] < screen_height / 2:
-                        return self.create_character(CharacterType.CHARMANDER)
+                        return self.create_character(CharacterType.CHARMANDER, game_time)
 
                     elif 0 < event.pos[0] < screen_width / 2 and screen_height / 2 < event.pos[1] < screen_height:
-                        return self.create_character(CharacterType.BULBASAUR)
+                        return self.create_character(CharacterType.BULBASAUR, game_time)
 
                     elif screen_width / 2 < event.pos[0] < screen_width and \
                             screen_height / 2 < event.pos[1] < screen_height:
-                        return self.create_character(CharacterType.SQUIRTLE)
+                        return self.create_character(CharacterType.SQUIRTLE, game_time)
 
     @staticmethod
-    def create_character(character_type: CharacterType):
+    def create_character(character_type: CharacterType, game_time: float):
         if character_type is CharacterType.SQUIRTLE:
-            return Squirtle(SquirtleImage.image_1)
+            return Squirtle(game_time)
         elif character_type is CharacterType.CHARMANDER:
-            return Charmander(CharmanderImage.image_1)
+            return Charmander(game_time)
         elif character_type is CharacterType.BULBASAUR:
-            return Bulbasaur(BulbasaurImage.image_1)
+            return Bulbasaur()
 
     def add_score(self, element: Eatable):
         self.score += element.score
 
-    def update_character(self):
+    def update_character(self, game_time: float):
         self.character.update_motion()
-        self.character.skill_process()
+        self.character.skill_process(game_time)
         self.character.reduce_life()
+        self.character.item_process(game_time)
         self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))
 
     def show_bonus_coin(self, objects: [Object]) -> [Object]:
@@ -115,7 +114,7 @@ class Game:
                 return True
         return False
 
-    def process_collision(self, objects: [Object]) -> None:
+    def process_collision(self, objects: [Object], game_time: float) -> None:
         for index, object in enumerate(objects):
             upside_down = False
 
@@ -150,17 +149,25 @@ class Game:
                     if self.character.skill.is_using and self.__is_collision_with_skill(object, upside_down):
                         if isinstance(self.character.skill, Flame):
                             self.score += CoinType.GOLD.value
-                    else:
+                    elif not self.character.item_processors:
                         self.character.life -= 20
                     objects.pop(index)
 
                 elif isinstance(object, Item):
                     if object.type is ItemType.HEALTH:
-                        self.__get_heal_item()
+                        self.__eat_health_item()
                         objects.pop(index)
-                    # TODO item proccess
 
-    def __get_heal_item(self):
+                    elif object.type is ItemType.BOOST:
+                        # self.character.item_processors.append(ItemProcessor(time.time(), ItemType.BOOST))
+                        # self.__eat_boost_item()
+                        objects.pop(index)
+
+                    elif object.type is ItemType.GIANT:
+                        self.character.eat_giant_item(game_time)
+                        objects.pop(index)
+
+    def __eat_health_item(self):
         self.character.life = self.character.max_life if self.character.life + 30 > self.character.max_life else self.character.life + 30
 
     def __is_collision(self, object: Object, upside_down: bool) -> bool:
@@ -248,15 +255,15 @@ class Game:
         self.background.screen.blit(letter.image, (screen_width, letter.y_pos))
 
     def show_item(self, objects: [Object]) -> None:
-        rand_num = int(random.randrange(0, 3))
-        if rand_num == 0:
+        rand_num = int(random.randrange(7, 9))
+        if rand_num in (0, 7):
             coin = Coin(CoinType.SILVER, 0)
             objects.append(coin)
             self.background.screen.blit(coin.image, (screen_width - coin.image.get_width(), coin.y_pos))
 
-        elif rand_num == 1:
+        elif rand_num == 7:
             self.__show_specific_item(objects, ItemType.BOOST)
-        elif rand_num == 2:
+        elif rand_num == 8:
             self.__show_specific_item(objects, ItemType.GIANT)
 
     def __show_specific_item(self, objects: [Object], item_type: ItemType):
@@ -275,15 +282,15 @@ class Game:
         pygame.draw.rect(self.background.screen, (102, 102, 255),
                          [300, 20, (screen_width / 2) * self.character.life / 100, 20])
 
-    def bonus_process(self) -> None:
+    def bonus_process(self, game_time: float) -> None:
         if self.character.bonus_status.bonus_eat_count == 5:
-            self.bonus_stage_start_time = time.time()
+            self.bonus_stage_start_time = game_time
             self.character.bonus_status.bonus_eat_count = 6
             self.is_default_stage = False
             self.background.show_bonus_screen()
 
         elif self.character.bonus_status.bonus_eat_count == 6:
-            if time.time() - self.bonus_stage_start_time >= 15:
+            if game_time - self.bonus_stage_start_time >= 15:
                 self.character.bonus_status = BonusStatus(False, False, False, False, False)
                 self.character.bonus_status.bonus_eat_count = 0
                 self.background.show_default_screen()

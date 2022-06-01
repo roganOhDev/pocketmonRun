@@ -1,4 +1,3 @@
-import time
 from dataclasses import dataclass
 
 from pygame.surface import Surface
@@ -23,14 +22,14 @@ class Skill:
     skill_end_time: float
     skill_start_time: float = 0
 
-    def __init__(self, images: [Surface]):
+    def __init__(self, images: [Surface], game_time: float):
         self.is_using = False
         if images:
             self.images = images
             self.current_image = self.images[0]
             self.image_none_change_count = 0
             self.image_num = 0
-            self.skill_end_time = time.time()
+            self.skill_end_time = game_time
 
     def get_width(self):
         return self.current_image.get_width()

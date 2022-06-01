@@ -6,7 +6,7 @@ class Health(Skill):
     health_multiply: float = 1.3
 
     def __init__(self):
-        super().__init__("")
+        super().__init__("", 0)
         self.type = SkillType.PASSIVE
 
     @staticmethod

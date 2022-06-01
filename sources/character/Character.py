@@ -1,4 +1,3 @@
-import time
 from dataclasses import dataclass
 from enum import Enum
 
@@ -12,6 +11,8 @@ from sources.character.CharacterStatus import CharacterStatus
 from sources.character.skill.Health import Health
 from sources.character.skill.Skill import Skill
 from sources.character.skill.Type import SkillType
+from sources.eat.Item.ItemProcessor import ItemProcessor
+from sources.eat.Item.ItemType import ItemType
 from sources.game_set import *
 from sources.musics import CharacterMusic
 
@@ -41,6 +42,7 @@ class Character:
     slide_bgm: Sound
     jump_bgm: Sound
     bonus_status: BonusStatus
+    item_processors: [ItemProcessor]
 
     skill: Skill
 
@@ -57,6 +59,7 @@ class Character:
         self.motion_count = 0
         self.slide_bgm = pygame.mixer.Sound(CharacterMusic.slide)
         self.jump_bgm = pygame.mixer.Sound(CharacterMusic.jump)
+        self.item_processors = []
 
         if isinstance(skill, Health):
             self.life *= Health().health_multiply
@@ -107,33 +110,60 @@ class Character:
             else:
                 self.current_image = self.slide_image
 
-    def skill_process(self):
+    def skill_process(self, game_time: float):
         if self.skill.type is SkillType.PASSIVE:
             return
 
         else:
-            if (not self.skill.is_using) and time.time() - self.skill.skill_end_time >= self.skill.delay:
-                self.start_using_skill()
+            if (not self.skill.is_using) and game_time - self.skill.skill_end_time >= self.skill.delay:
+                self.start_using_skill(game_time)
 
-            elif self.skill.is_using and time.time() - self.skill.skill_start_time < self.skill.time:
+            elif self.skill.is_using and game_time - self.skill.skill_start_time < self.skill.time:
                 self.keep_using_skill()
 
-            elif self.skill.is_using and time.time() - self.skill.skill_start_time >= self.skill.time:
-                self.stop_using_skill()
+            elif self.skill.is_using and game_time - self.skill.skill_start_time >= self.skill.time:
+                self.stop_using_skill(game_time)
 
-    def start_using_skill(self):
+    def start_using_skill(self, game_time: float):
         self.skill.is_using = True
         self.skill.update_motion(self.status == CharacterStatus.SLIDING)
-        self.skill.skill_start_time = time.time()
+        self.skill.skill_start_time = game_time
 
     def keep_using_skill(self):
         self.skill.update_motion(self.status == CharacterStatus.SLIDING)
         self.current_image = self.skill.current_image
 
-    def stop_using_skill(self):
+    def stop_using_skill(self, game_time: float):
         self.skill.is_using = False
-        self.skill.skill_end_time = time.time()
+        self.skill.skill_end_time = game_time
         self.current_image = self.image1
+
+    def item_process(self, game_time: float):
+        for (index, using_item) in enumerate(self.item_processors):
+            if game_time - using_item.item_start_time >= using_item.item_time:
+                if using_item.item_type is ItemType.GIANT:
+                    self.end_giant_item()
+                    self.item_processors.pop(index)
+
+        if any(item_process.item_type == ItemType.GIANT for item_process in self.item_processors):
+            self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+            self.current_image = pygame.transform.rotozoom(self.current_image, 0, 4)
+
+    def eat_giant_item(self, game_time: float):
+        if any(item_process.item_type == ItemType.GIANT for item_process in self.item_processors):
+            giant_item_processor = list(filter(lambda item_processor: item_processor.item_type == ItemType.GIANT,
+                                               self.item_processors))[0]
+            giant_item_processor.item_time += 10
+        else:
+            self.item_processors.append(ItemProcessor(game_time, ItemType.GIANT))
+
+    def end_giant_item(self):
+        self.current_image = pygame.transform.rotozoom(self.current_image, 0, 1 / 4)
+        self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+
+    @staticmethod
+    def is_giant_item(item_processor: ItemProcessor):
+        return item_processor.item_type == ItemType.GIANT
 
     def y_move(self, y_pos: float):
         self.y_pos = y_pos

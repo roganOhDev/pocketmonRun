@@ -8,7 +8,7 @@ y_fix: float = 17
 
 class Bulbasaur(Character):
 
-    def __init__(self, image1_path):
+    def __init__(self):
         skill = Health()
 
         self.type = CharacterType.BULBASAUR

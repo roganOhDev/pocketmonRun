@@ -8,8 +8,8 @@ y_fix: float = 45
 
 class Squirtle(Character):
 
-    def __init__(self, image1_path):
-        skill = Shield()
+    def __init__(self, game_time: float):
+        skill = Shield(game_time)
 
         self.type = CharacterType.SQUIRTLE
 

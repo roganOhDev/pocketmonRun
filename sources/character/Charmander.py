@@ -7,8 +7,8 @@ from sources.images import CharmanderImage
 y_fix: float = 30
 class Charmander(Character):
 
-    def __init__(self, image1_path):
-        skill = Flame()
+    def __init__(self, game_time: float):
+        skill = Flame(game_time)
 
         self.type = CharacterType.CHARMANDER
 

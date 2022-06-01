@@ -20,6 +20,8 @@ class Main:
     can_create_obstacle_level: int = 0
     objects: [Object] = []
     status: bool = True
+    game_time: float = 0
+    delay_time: float = 0
 
     def is_run(self) -> bool:
         return self.status
@@ -29,13 +31,13 @@ class Main:
 
     def init_game(self) -> None:
         pygame.init()
-        self.game = Game()
+        self.game = Game(pygame.time.get_ticks() / 1000)
 
     def object_init_blit(self, object: Object):
         self.game.background.screen.blit(object.image, (object.x_pos, object.y_pos))
 
     def create_object(self):
-        object_num = int(random.randrange(0, 11))
+        object_num = int(random.randrange(0, 10))
         if not self.game.is_default_stage:
             self.__show_coin_in_bonus_stage()
 
@@ -148,9 +150,9 @@ class Main:
         middle_gold_y_coin_pos = random.randrange(highest_gold_coin_y_pos, int(screen_height - floor_height - 100))
         lowest_gold_y_coin_pos = random.randrange(middle_gold_y_coin_pos, int(screen_height - floor_height - 100))
 
-        highest_gold_coin = Coin(CoinType.GOLD,  highest_gold_coin_y_pos)
-        middle_gold_coin = Coin(CoinType.GOLD,  middle_gold_y_coin_pos)
-        lowest__gold_coin = Coin(CoinType.GOLD,  lowest_gold_y_coin_pos)
+        highest_gold_coin = Coin(CoinType.GOLD, highest_gold_coin_y_pos)
+        middle_gold_coin = Coin(CoinType.GOLD, middle_gold_y_coin_pos)
+        lowest__gold_coin = Coin(CoinType.GOLD, lowest_gold_y_coin_pos)
 
         self.objects.append(highest_gold_coin)
         self.objects.append(middle_gold_coin)
@@ -159,7 +161,6 @@ class Main:
         self.object_init_blit(highest_gold_coin)
         self.object_init_blit(middle_gold_coin)
         self.object_init_blit(lowest__gold_coin)
-
 
     def create_bronze_coin_if_obstacle_cant_blit(self):
         coin = Coin(CoinType.BRONZE, 0)
@@ -174,11 +175,11 @@ class Main:
             if object.x_pos < -object.image.get_width():
                 self.objects.pop(index)
 
-    def screen_update(self):
+    def screen_update(self, game_time: float):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
         self.game.background.floor_update()
 
-        self.game.update_character()
+        self.game.update_character(game_time)
 
         if self.time_after_create_object >= 22:
             self.create_object()
@@ -186,12 +187,12 @@ class Main:
         else:
             self.time_after_create_object += 1
 
-        self.game.process_collision(self.objects)
+        self.game.process_collision(self.objects, game_time)
         self.move_object()
         self.game.character.bonus_status.show_current_bonus_collection(self.game.background.screen)
         self.game.show_score()
         self.game.show_life()
-        self.game.bonus_process()
+        self.game.bonus_process(game_time)
 
         if not self.is_run():
             self.quit()
@@ -210,20 +211,51 @@ class Main:
         pygame.time.delay(2000)
         pygame.quit()
 
+    def pause(self) -> float:
+        pause_start_time = pygame.time.get_ticks()
+        self.game.background.screen.fill(pygame.Color("black"))
+        rendered_text1 = Text(40, screen_width, screen_height, "Pause".format(str(int(self.game.score))),
+                              (255, 255, 0)).render()
+        rendered_text2 = Text(30, screen_width / 2, screen_height / 2 + 90,
+                              "Press ESC To Rerun".format(str(int(self.game.score))),
+                              (255, 255, 0)).render()
+
+        self.game.background.screen.blit(rendered_text1, Text.get_pos_to_center(rendered_text1))
+        self.game.background.screen.blit(rendered_text2,
+                                         rendered_text2.get_rect(center=(screen_width / 2, screen_height / 2 + 90)))
+
+        pygame.display.update()
+
+        while True:
+            self.game.time.clock.tick(fps)
+            for event in (pygame.event.get()):
+                if event.type == pygame.QUIT:
+                    self.game_stop()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return (pygame.time.get_ticks() - pause_start_time) / 1000
+
     def main(self) -> None:
         self.init_game()
         self.game.start_game()
+        self.game_time = pygame.time.get_ticks() / 1000
 
         while self.is_run():
             self.game.time.clock.tick(fps)
-            self.screen_update()
+            self.screen_update(self.game_time)
             self.status = self.game.character.is_life_remain()
 
             for event in (pygame.event.get()):
                 if event.type == pygame.QUIT:
                     self.game_stop()
+
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    self.delay_time += self.pause()
+
                 else:
                     self.game.character.character_operation(event)
+
+            self.game_time = pygame.time.get_ticks() / 1000 - self.delay_time
 
         self.quit()
 
