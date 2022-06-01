@@ -21,8 +21,6 @@ class Charmander(Character):
 
         self.slide_images = []
         slide_image_1 = pygame.image.load(CharmanderImage.slide_1).convert_alpha()
-        self.slide_images.append(pygame.transform.rotozoom(slide_image_1, 0, 0.8))
-        # slide_image_2 = pygame.image.load(CharmanderImage.slide_2).convert_alpha()
-        # self.slide_images.append(pygame.transform.rotozoom(slide_image_2, 0, 0.8))
+        self.slide_image = pygame.transform.rotozoom(slide_image_1, 0, 0.8)
 
         super().__init__(skill)

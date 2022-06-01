@@ -12,12 +12,14 @@ class Shield(Skill):
         image1 = pygame.transform.rotozoom(image1, 0, 0.4)
         image2 = pygame.image.load(SquirtleImage.skill_2).convert_alpha()
         image2 = pygame.transform.rotozoom(image2, 0, 0.4)
+        slide_image = pygame.image.load(SquirtleImage.slide_skill).convert_alpha()
+        slide_image = pygame.transform.rotozoom(slide_image, 0, 0.4)
 
         images = [image1, image2]
 
         super().__init__(images)
 
         self.type = SkillType.TIME
-
+        self.slide_image = slide_image
         self.time = 5
         self.delay = 10

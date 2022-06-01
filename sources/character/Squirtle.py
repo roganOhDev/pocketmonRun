@@ -22,7 +22,7 @@ class Squirtle(Character):
 
         self.slide_images = []
         slide_image = pygame.image.load(SquirtleImage.slide).convert_alpha()
-        self.slide_images.append(pygame.transform.rotozoom(slide_image, 0, 0.7))
+        self.slide_image = pygame.transform.rotozoom(slide_image, 0, 0.7)
 
         super().__init__(skill)
 

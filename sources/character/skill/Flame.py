@@ -12,6 +12,8 @@ class Flame(Skill):
         image1 = pygame.transform.rotozoom(image1, 0, 0.7)
         image2 = pygame.image.load(CharmanderImage.skill_2).convert_alpha()
         image2 = pygame.transform.rotozoom(image2, 0, 0.7)
+        slide_image = pygame.image.load(CharmanderImage.slide_skill).convert_alpha()
+        slide_image = pygame.transform.rotozoom(slide_image, 0, 0.7)
 
         images = [image1, image2]
         super().__init__(images)
@@ -19,11 +21,10 @@ class Flame(Skill):
         self.type = SkillType.TIME
         self.time = 5
         self.delay = 10
+        self.slide_image = slide_image
 
     def get_width(self) -> float:
         return self.current_image.get_width() / 2
 
     def get_height(self) -> int:
         return self.current_image.get_height()
-
-# TODO 불에 맞춰서 width, height 리턴해야함

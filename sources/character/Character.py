@@ -37,7 +37,7 @@ class Character:
     y_pos: float
     y_speed: float
     motion_count: int
-    slide_images: [Surface]
+    slide_image: Surface
     slide_bgm: Sound
     jump_bgm: Sound
     bonus_status: BonusStatus
@@ -100,12 +100,10 @@ class Character:
             self.jumping()
 
         elif self.status is CharacterStatus.SLIDING:
-            if self.motion_count >= 7:
-                self.current_image \
-                    = self.slide_images[self.choose_slide_image_index(0 if self.current_image_bool else 1)]
-                self.current_image_bool = not self.current_image_bool
-
-            self.motion_count = (self.motion_count + 1) % 8
+            if self.skill.is_using:
+                self.current_image = self.skill.slide_image
+            else:
+                self.current_image = self.slide_image
 
     def skill_process(self):
         if self.skill.type is SkillType.PASSIVE:
@@ -122,27 +120,18 @@ class Character:
                 self.stop_using_skill()
 
     def start_using_skill(self):
-        if self.status is CharacterStatus.SLIDING:
-            self.slide_bgm.stop()
-            self.status = CharacterStatus.RUNNING
-            self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
-
         self.skill.is_using = True
-        self.skill.update_motion()
-        self.current_image = self.skill.current_image
+        self.skill.update_motion(self.status == CharacterStatus.SLIDING)
         self.skill.skill_start_time = time.time()
 
     def keep_using_skill(self):
-        self.skill.update_motion()
+        self.skill.update_motion(self.status == CharacterStatus.SLIDING)
         self.current_image = self.skill.current_image
 
     def stop_using_skill(self):
         self.skill.is_using = False
         self.skill.skill_end_time = time.time()
         self.current_image = self.image1
-
-    def choose_slide_image_index(self, num: int) -> int:
-        return (len(self.slide_images) - 1) * num
 
     def y_move(self, y_pos: float):
         self.y_pos = y_pos
@@ -190,12 +179,15 @@ class Character:
         if (not self.is_jumping()) or (
                 self.is_jumping() and self.y_pos > screen_height - floor_height - self.get_height() + self.fix_y_value() - 90 and self.y_speed > 0):
 
-            if not self.skill.is_using:
-                self.slide_bgm.play()
-                self.status = CharacterStatus.SLIDING
-                self.current_image = self.slide_images[0]
-                self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
-                self.motion_count = 0
+            if self.skill.is_using:
+                self.current_image = self.skill.slide_image
+            else:
+                self.current_image = self.slide_image
+
+            self.slide_bgm.play()
+            self.status = CharacterStatus.SLIDING
+            self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+            self.motion_count = 0
 
             self.y_speed = 0
 

@@ -22,6 +22,6 @@ class Bulbasaur(Character):
 
         self.slide_images = []
         slide_image = pygame.image.load(BulbasaurImage.slide).convert_alpha()
-        self.slide_images.append(pygame.transform.rotozoom(slide_image, 0, 0.25))
+        self.slide_images = pygame.transform.rotozoom(slide_image, 0, 0.25)
 
         super().__init__(skill)

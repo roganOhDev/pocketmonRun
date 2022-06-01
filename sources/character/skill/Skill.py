@@ -15,6 +15,7 @@ class Skill:
     time: int
     delay: int
     current_image: Surface
+    slide_image: Surface
     image_none_change_count: int
     image_num: int
     is_using: bool
@@ -37,8 +38,11 @@ class Skill:
     def get_height(self):
         return self.current_image.get_height()
 
-    def update_motion(self):
-        if self.image_none_change_count >= 10:
+    def update_motion(self, is_sliding: bool):
+        if is_sliding:
+            self.current_image = self.slide_image
+
+        elif self.image_none_change_count >= 10:
             self.current_image = self.images[self.image_num]
             self.image_num = (self.image_num + 1) % len(self.images)
             self.image_none_change_count = 0

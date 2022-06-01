@@ -51,7 +51,7 @@ class SquirtleImage:
     image_2 = IMAGE_ROOT_PATH + "squirtle_2.png"
     skill_1 = IMAGE_ROOT_PATH + "squirtle_skill_1.png"
     skill_2 = IMAGE_ROOT_PATH + "squirtle_skill_2.png"
-    skill_3 = IMAGE_ROOT_PATH + "squirtle_skill_3.png"
+    slide_skill = IMAGE_ROOT_PATH + "squirtle_skill_3.png"
     slide = IMAGE_ROOT_PATH + "squirtle_slide.png"
 
 
@@ -61,7 +61,7 @@ class CharmanderImage:
     skill_1 = IMAGE_ROOT_PATH + "charmander_skill_1.png"
     skill_2 = IMAGE_ROOT_PATH + "charmander_skill_2.png"
     slide_1 = IMAGE_ROOT_PATH + "charmander_slide_1.png"
-    slide_2 = IMAGE_ROOT_PATH + "charmander_slide_2.png"
+    slide_skill = IMAGE_ROOT_PATH + "charmander_slide_2.png"
 
 
 class BulbasaurImage:
