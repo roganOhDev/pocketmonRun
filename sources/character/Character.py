@@ -53,12 +53,14 @@ class Character:
         self.bonus_status = BonusStatus(False, False, False, False, False)
         self.y_speed = 0
         self.life = 100
+        self.max_life = 100
         self.motion_count = 0
         self.slide_bgm = pygame.mixer.Sound(CharacterMusic.slide)
         self.jump_bgm = pygame.mixer.Sound(CharacterMusic.jump)
 
         if isinstance(skill, Health):
             self.life *= Health().health_multiply
+            self.max_life *= Health().health_multiply
 
     def get_width(self) -> float:
         return self.current_image.get_width()

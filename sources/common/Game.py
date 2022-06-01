@@ -23,6 +23,8 @@ from sources.eat.Bonus.BonusCoinType import BonusCoinType
 from sources.eat.Coin.Coin import Coin
 from sources.eat.Coin.CoinType import CoinType
 from sources.eat.Eatable import Eatable
+from sources.eat.Item.Item import Item
+from sources.eat.Item.ItemType import ItemType
 from sources.game_set import *
 from sources.images import BulbasaurImage, SquirtleImage, CharmanderImage
 from sources.musics import BackgroundMusic, CoinMusic
@@ -90,10 +92,14 @@ class Game:
         self.background.screen.blit(self.character.current_image, (self.character.x_pos, self.character.y_pos))
 
     def show_bonus_coin(self, objects: [Object]) -> [Object]:
-        is_bonus = (True if int(random.randrange(0, 4)) <= 3 else False) and (not self.has_bonus_coin(objects))
+        rand_num = int(random.randrange(0, 5))
+        is_bonus = (True if rand_num <= 3 else False) and (not self.has_bonus_coin(objects))
 
         if is_bonus:
             self.__show_bonus_coin(objects, self.character.bonus_status.choose_bonus_coin())
+
+        elif rand_num == 4:
+            self.__show_specific_item(objects, ItemType.HEALTH)
 
         else:
             coin = Coin(CoinType.BRONZE, 0)
@@ -109,7 +115,7 @@ class Game:
                 return True
         return False
 
-    def process_collision(self, objects: [Object]) -> bool:
+    def process_collision(self, objects: [Object]) -> None:
         for index, object in enumerate(objects):
             upside_down = False
 
@@ -148,7 +154,14 @@ class Game:
                         self.character.life -= 20
                     objects.pop(index)
 
-        return True
+                elif isinstance(object, Item):
+                    if object.type is ItemType.HEALTH:
+                        self.__get_heal_item()
+                        objects.pop(index)
+                    # TODO item proccess
+
+    def __get_heal_item(self):
+        self.character.life = self.character.max_life if self.character.life + 30 > self.character.max_life else self.character.life + 30
 
     def __is_collision(self, object: Object, upside_down: bool) -> bool:
         character_left = self.character.x_pos
@@ -198,7 +211,7 @@ class Game:
 
     def __is_collision_with_skill(self, object: Object, upside_down: bool) -> bool:
         skill_right = self.character.x_pos + self.character.get_width()
-        skill_left =  skill_right - self.character.skill.get_width()
+        skill_left = skill_right - self.character.skill.get_width()
         skill_low = self.character.y_pos + self.character.get_height() - 10
         skill_high = self.character.y_pos + 10
 
@@ -232,7 +245,24 @@ class Game:
 
         letter = Bonus(bonus_coin)
         objects.append(letter)
-        self.background.screen.blit(letter.image, (screen_width - letter.image.get_width(), letter.y_pos))
+        self.background.screen.blit(letter.image, (screen_width, letter.y_pos))
+
+    def show_item(self, objects: [Object]) -> None:
+        rand_num = int(random.randrange(0, 3))
+        if rand_num == 0:
+            coin = Coin(CoinType.SILVER, 0)
+            objects.append(coin)
+            self.background.screen.blit(coin.image, (screen_width - coin.image.get_width(), coin.y_pos))
+
+        elif rand_num == 1:
+            self.__show_specific_item(objects, ItemType.BOOST)
+        elif rand_num == 2:
+            self.__show_specific_item(objects, ItemType.GIANT)
+
+    def __show_specific_item(self, objects: [Object], item_type: ItemType):
+        item = Item(item_type)
+        objects.append(item)
+        self.background.screen.blit(item.image, (screen_width, item.y_pos))
 
     def show_score(self) -> None:
         score_text = Text(40, 30, 20, str(int(self.score)), (255, 255, 0))
@@ -258,4 +288,3 @@ class Game:
                 self.character.bonus_status.bonus_eat_count = 0
                 self.background.show_default_screen()
                 self.is_default_stage = True
-
