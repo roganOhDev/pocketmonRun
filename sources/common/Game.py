@@ -114,7 +114,7 @@ class Game:
                 return True
         return False
 
-    def process_collision(self, objects: [Object], game_time: float) -> None:
+    def process_collision(self, objects: [Object]) -> None:
         for index, object in enumerate(objects):
             upside_down = False
 
@@ -149,6 +149,7 @@ class Game:
                     if self.character.skill.is_using and self.__is_collision_with_skill(object, upside_down):
                         if isinstance(self.character.skill, Flame):
                             self.score += CoinType.GOLD.value
+
                     elif not self.character.item_processors:
                         self.character.life -= 20
                     objects.pop(index)
@@ -258,15 +259,15 @@ class Game:
         self.background.screen.blit(letter.image, (screen_width, letter.y_pos))
 
     def show_item(self, objects: [Object]) -> None:
-        rand_num = int(random.randrange(7, 9))
-        if rand_num in (0, 7):
+        rand_num = int(random.randrange(0, 10))
+        if rand_num in (0, 1, 2, 3, 4, 5, 6, 7):
             coin = Coin(CoinType.SILVER, 0)
             objects.append(coin)
             self.background.screen.blit(coin.image, (screen_width - coin.image.get_width(), coin.y_pos))
 
-        elif rand_num == 7:
-            self.__show_specific_item(objects, ItemType.BOOST)
         elif rand_num == 8:
+            self.__show_specific_item(objects, ItemType.BOOST)
+        elif rand_num == 9:
             self.__show_specific_item(objects, ItemType.GIANT)
 
     def __show_specific_item(self, objects: [Object], item_type: ItemType):

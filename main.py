@@ -37,7 +37,7 @@ class Main:
         self.game.background.screen.blit(object.image, (object.x_pos, object.y_pos))
 
     def create_object(self):
-        object_num = int(random.randrange(10, 11))
+        object_num = int(random.randrange(0, 11))
         if not self.game.is_default_stage:
             self.__show_coin_in_bonus_stage()
 
@@ -187,7 +187,7 @@ class Main:
         else:
             self.time_after_create_object += 1
 
-        self.game.process_collision(self.objects, game_time)
+        self.game.process_collision(self.objects)
         self.move_object()
         self.game.character.bonus_status.show_current_bonus_collection(self.game.background.screen)
         self.game.show_score()

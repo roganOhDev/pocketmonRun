@@ -87,17 +87,17 @@ class Character:
 
         if self.type is CharacterType.CHARMANDER:
             if self.status is CharacterStatus.SLIDING:
-                value += 51
+                value += 30
             value += 21
 
         elif self.type is CharacterType.BULBASAUR:
             if self.status is CharacterStatus.SLIDING:
-                value += 39
+                value += 30
             value += 9
 
         elif self.type is CharacterType.SQUIRTLE:
             if self.status is CharacterStatus.SLIDING:
-                value += 52
+                value += 30
             value += 22
 
         return value
@@ -161,7 +161,6 @@ class Character:
 
                 elif game_time - item_process.item_start_time >= item_process.item_time:
                     self.end_giant_item(index)
-                    self.item_processors.pop(index)
 
     def eat_giant_item(self):
         pygame.mixer.Sound(CoinMusic.default).play()
@@ -183,9 +182,10 @@ class Character:
         self.item_processors[index].item_time += 5
 
     def end_giant_item(self, index: int):
-        self.item_processors[index].is_using = False
-        self.set_current_image(pygame.transform.rotozoom(self.current_image, 0, 1 / 4))
+        self.item_processors[index].is_active = False
+        self.set_current_image(pygame.transform.rotozoom(self.current_image, 0, 1 / 3))
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+        self.item_processors.pop(index)
 
     @staticmethod
     def is_giant_item(item_processor: ItemProcessor):
