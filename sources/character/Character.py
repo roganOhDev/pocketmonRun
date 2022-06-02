@@ -14,7 +14,7 @@ from sources.character.skill.Type import SkillType
 from sources.eat.Item.ItemProcessor import ItemProcessor
 from sources.eat.Item.ItemType import ItemType
 from sources.game_set import *
-from sources.musics import CharacterMusic
+from sources.musics import CharacterMusic, CoinMusic
 
 character_x_pos = 3
 
@@ -51,6 +51,7 @@ class Character:
         self.current_image = self.image1
         self.current_image_bool = True
         self.status = CharacterStatus.RUNNING
+        self.item_processors = []
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
         self.bonus_status = BonusStatus(False, False, False, False, False)
         self.y_speed = 0
@@ -59,7 +60,6 @@ class Character:
         self.motion_count = 0
         self.slide_bgm = pygame.mixer.Sound(CharacterMusic.slide)
         self.jump_bgm = pygame.mixer.Sound(CharacterMusic.jump)
-        self.item_processors = []
 
         if isinstance(skill, Health):
             self.life *= Health().health_multiply
@@ -71,21 +71,36 @@ class Character:
     def get_height(self) -> float:
         return self.current_image.get_height()
 
+    def set_current_image(self, current_image: Surface):
+        for (index, item_process) in enumerate(self.item_processors):
+            if item_process.item_type == ItemType.GIANT and item_process.is_active:
+                current_image = pygame.transform.rotozoom(current_image, 0, 3)
+
+        self.current_image = current_image
+
     def fix_y_value(self) -> int:
+        value = 0
+        for item_process in self.item_processors:
+            if item_process.item_type == ItemType.GIANT and item_process.is_active:
+                if self.type is CharacterType.CHARMANDER:
+                    value += 30
+
         if self.type is CharacterType.CHARMANDER:
             if self.status is CharacterStatus.SLIDING:
-                return 51
-            return 21
+                value += 51
+            value += 21
 
         elif self.type is CharacterType.BULBASAUR:
             if self.status is CharacterStatus.SLIDING:
-                return 39
-            return 9
+                value += 39
+            value += 9
 
         elif self.type is CharacterType.SQUIRTLE:
             if self.status is CharacterStatus.SLIDING:
-                return 52
-            return 22
+                value += 52
+            value += 22
+
+        return value
 
     def reduce_life(self):
         self.life -= 1 / fps
@@ -96,7 +111,7 @@ class Character:
     def update_motion(self):
         if self.status is CharacterStatus.RUNNING:
             if self.motion_count >= 10:
-                self.current_image = self.image1 if self.current_image_bool else self.image2
+                self.set_current_image(self.image1 if self.current_image_bool else self.image2)
                 self.current_image_bool = not self.current_image_bool
 
             self.motion_count = (self.motion_count + 1) % 11
@@ -106,9 +121,9 @@ class Character:
 
         elif self.status is CharacterStatus.SLIDING:
             if self.skill.is_using:
-                self.current_image = self.skill.slide_image
+                self.set_current_image(self.skill.slide_image)
             else:
-                self.current_image = self.slide_image
+                self.set_current_image(self.slide_image)
 
     def skill_process(self, game_time: float):
         if self.skill.type is SkillType.PASSIVE:
@@ -131,34 +146,45 @@ class Character:
 
     def keep_using_skill(self):
         self.skill.update_motion(self.status == CharacterStatus.SLIDING)
-        self.current_image = self.skill.current_image
+        self.set_current_image(self.skill.current_image)
 
     def stop_using_skill(self, game_time: float):
         self.skill.is_using = False
         self.skill.skill_end_time = game_time
-        self.current_image = self.image1
+        self.set_current_image(self.image1)
 
     def item_process(self, game_time: float):
-        for (index, using_item) in enumerate(self.item_processors):
-            if game_time - using_item.item_start_time >= using_item.item_time:
-                if using_item.item_type is ItemType.GIANT:
-                    self.end_giant_item()
+        for (index, item_process) in enumerate(self.item_processors):
+            if item_process.item_type == ItemType.GIANT:
+                if not item_process.is_active:
+                    self.start_giant_item(game_time, index)
+
+                elif game_time - item_process.item_start_time >= item_process.item_time:
+                    self.end_giant_item(index)
                     self.item_processors.pop(index)
 
-        if any(item_process.item_type == ItemType.GIANT for item_process in self.item_processors):
-            self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
-            self.current_image = pygame.transform.rotozoom(self.current_image, 0, 4)
+    def eat_giant_item(self):
+        pygame.mixer.Sound(CoinMusic.default).play()
 
-    def eat_giant_item(self, game_time: float):
-        if any(item_process.item_type == ItemType.GIANT for item_process in self.item_processors):
-            giant_item_processor = list(filter(lambda item_processor: item_processor.item_type == ItemType.GIANT,
-                                               self.item_processors))[0]
-            giant_item_processor.item_time += 10
-        else:
-            self.item_processors.append(ItemProcessor(game_time, ItemType.GIANT))
+        for (index, item_process) in enumerate(self.item_processors):
+            if item_process.item_type == ItemType.GIANT:
+                self.overlap_giant_item(index)
+                return
 
-    def end_giant_item(self):
-        self.current_image = pygame.transform.rotozoom(self.current_image, 0, 1 / 4)
+        self.item_processors.append(ItemProcessor(ItemType.GIANT))
+
+    def start_giant_item(self, game_time: float, index: int):
+        self.item_processors[index].is_active = True
+        self.set_current_image(self.current_image)
+        self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
+        self.item_processors[index].item_start_time = game_time
+
+    def overlap_giant_item(self, index):
+        self.item_processors[index].item_time += 5
+
+    def end_giant_item(self, index: int):
+        self.item_processors[index].is_using = False
+        self.set_current_image(pygame.transform.rotozoom(self.current_image, 0, 1 / 4))
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
 
     @staticmethod
@@ -176,7 +202,7 @@ class Character:
         self.jump_bgm.stop()
 
         self.status = CharacterStatus.RUNNING
-        self.current_image = self.image2
+        self.set_current_image(self.image2)
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
         self.y_speed = 0
         self.motion_count = 0
@@ -192,9 +218,9 @@ class Character:
                 self.status = CharacterStatus.JUMPING
 
             if self.skill.is_using:
-                self.current_image = self.skill.images[0]
+                self.set_current_image(self.skill.images[0])
             else:
-                self.current_image = self.image1
+                self.set_current_image(self.image1)
 
             self.y_speed = -15
             self.motion_count = 0
@@ -212,9 +238,9 @@ class Character:
                 self.is_jumping() and self.y_pos > screen_height - floor_height - self.get_height() + self.fix_y_value() - 90 and self.y_speed > 0):
 
             if self.skill.is_using:
-                self.current_image = self.skill.slide_image
+                self.set_current_image(self.skill.slide_image)
             else:
-                self.current_image = self.slide_image
+                self.set_current_image(self.slide_image)
 
             self.slide_bgm.play()
             self.status = CharacterStatus.SLIDING

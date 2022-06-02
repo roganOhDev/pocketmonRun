@@ -5,8 +5,8 @@ from sources.eat.Item.ItemType import ItemType
 
 @dataclass
 class ItemProcessor:
-    item_start_time: float
     item_type: ItemType
-    is_invincibility: bool = False
+    item_start_time: float = 0
     item_time: int = 5
+    is_active: bool = False
 

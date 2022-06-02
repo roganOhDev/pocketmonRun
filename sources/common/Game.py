@@ -164,7 +164,7 @@ class Game:
                         objects.pop(index)
 
                     elif object.type is ItemType.GIANT:
-                        self.character.eat_giant_item(game_time)
+                        self.character.eat_giant_item()
                         objects.pop(index)
 
     def __eat_health_item(self):
@@ -189,6 +189,9 @@ class Game:
 
         elif self.character.type is CharacterType.BULBASAUR and not isinstance(object, Trap):
             character_high -= 5
+
+        if self.character.type is CharacterType.BULBASAUR and isinstance(object, Item):
+            character_high -= 4
 
         if not isinstance(object, Trap):
             if (character_left <= object_left <= character_right) and (

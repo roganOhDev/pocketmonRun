@@ -37,7 +37,7 @@ class Main:
         self.game.background.screen.blit(object.image, (object.x_pos, object.y_pos))
 
     def create_object(self):
-        object_num = int(random.randrange(0, 10))
+        object_num = int(random.randrange(10, 11))
         if not self.game.is_default_stage:
             self.__show_coin_in_bonus_stage()
 
