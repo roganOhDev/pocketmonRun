@@ -5,6 +5,7 @@ from sources.common.Object import Object
 from sources.common.Text import Text
 from sources.eat.Coin.Coin import Coin
 from sources.eat.Coin.CoinType import CoinType
+from sources.eat.Item.ItemType import ItemType
 from sources.game_set import *
 from sources.trap.DoubleJumpObstacle1 import DoubleJumpObstacle1
 from sources.trap.DoubleJumpObstacle2 import DoubleJumpObstacle2
@@ -22,6 +23,7 @@ class Main:
     status: bool = True
     game_time: float = 0
     delay_time: float = 0
+    game_speed: float = speed
 
     def is_run(self) -> bool:
         return self.status
@@ -169,11 +171,23 @@ class Main:
 
     def move_object(self):
         for index, object in enumerate(self.objects):
-            object.position_update_character_run(object.x_pos - speed)
+            object.position_update_character_run(object.x_pos - self.game_speed)
             self.game.background.screen.blit(object.image, (object.x_pos, object.y_pos))
 
             if object.x_pos < -object.image.get_width():
                 self.objects.pop(index)
+
+    def boost_process(self, game_time: float):
+        for (index, item_process) in enumerate(self.game.character.item_processors):
+            if item_process.item_type == ItemType.BOOST:
+                if not item_process.is_active:
+                    self.game_speed *= 4
+                    self.game.character.start_boost_item(game_time, index)
+
+                elif game_time - item_process.item_start_time >= item_process.item_time:
+                    self.game_speed /= 4
+                    self.game.character.end_boost_item(index)
+
 
     def screen_update(self, game_time: float):
         self.game.background.screen.blit(self.game.background.image, (0, 0))
@@ -181,7 +195,7 @@ class Main:
 
         self.game.update_character(game_time)
 
-        if self.time_after_create_object >= 22:
+        if self.time_after_create_object >= int(105.6 / self.game_speed):
             self.create_object()
             self.time_after_create_object = 0
         else:
@@ -193,6 +207,8 @@ class Main:
         self.game.show_score()
         self.game.show_life()
         self.game.bonus_process(game_time)
+
+        self.boost_process(game_time)
 
         if not self.is_run():
             self.quit()

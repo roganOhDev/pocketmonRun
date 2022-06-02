@@ -187,6 +187,28 @@ class Character:
         self.y_pos = screen_height - floor_height - self.get_height() + self.fix_y_value()
         self.item_processors.pop(index)
 
+    def eat_boost_item(self):
+        pygame.mixer.Sound(CoinMusic.default).play()
+
+        for (index, item_process) in enumerate(self.item_processors):
+            if item_process.item_type == ItemType.BOOST:
+                self.overlap_boost_item(index)
+                return
+
+        self.item_processors.append(ItemProcessor(ItemType.BOOST))
+
+    def start_boost_item(self, game_time: float, index: int):
+        self.item_processors[index].item_start_time = game_time
+        self.item_processors[index].is_active = True
+
+    def overlap_boost_item(self, index):
+        self.item_processors[index].item_time += 5
+
+    def end_boost_item(self, index: int):
+        self.item_processors[index].is_active = False
+        self.item_processors.pop(index)
+
+
     @staticmethod
     def is_giant_item(item_processor: ItemProcessor):
         return item_processor.item_type == ItemType.GIANT

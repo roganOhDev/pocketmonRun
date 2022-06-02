@@ -160,8 +160,7 @@ class Game:
                         objects.pop(index)
 
                     elif object.type is ItemType.BOOST:
-                        # self.character.item_processors.append(ItemProcessor(time.time(), ItemType.BOOST))
-                        # self.__eat_boost_item()
+                        self.character.eat_boost_item()
                         objects.pop(index)
 
                     elif object.type is ItemType.GIANT:
@@ -194,12 +193,17 @@ class Game:
         if self.character.type is CharacterType.BULBASAUR and isinstance(object, Item):
             character_high -= 4
 
+        if isinstance(object, Item):
+            if object.type is ItemType.BOOST:
+                object_high += 7
+
         if not isinstance(object, Trap):
             if (character_left <= object_left <= character_right) and (
                     character_high <= object_high <= character_low):
-                # print("obstacle_high:" + str(object_high))
-                # print("character_high:  " + str(character_high))
-                # print("character_low:  " + str(character_low))
+                    # print("item type: " + str(object.type))
+                    # print("obstacle_high:" + str(object_high))
+                    # print("character_high:  " + str(character_high))
+                    # print("character_low:  " + str(character_low))
                 return True
 
         else:
@@ -259,7 +263,7 @@ class Game:
         self.background.screen.blit(letter.image, (screen_width, letter.y_pos))
 
     def show_item(self, objects: [Object]) -> None:
-        rand_num = int(random.randrange(0, 10))
+        rand_num = int(random.randrange(8, 9))
         if rand_num in (0, 1, 2, 3, 4, 5, 6, 7):
             coin = Coin(CoinType.SILVER, 0)
             objects.append(coin)
