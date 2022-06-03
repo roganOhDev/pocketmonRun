@@ -263,7 +263,7 @@ class Game:
         self.background.screen.blit(letter.image, (screen_width, letter.y_pos))
 
     def show_item(self, objects: [Object]) -> None:
-        rand_num = int(random.randrange(8, 9))
+        rand_num = int(random.randrange(0, 10))
         if rand_num in (0, 1, 2, 3, 4, 5, 6, 7):
             coin = Coin(CoinType.SILVER, 0)
             objects.append(coin)
