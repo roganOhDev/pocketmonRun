@@ -50,7 +50,8 @@ class Background:
 
         self.bgm.play(loops=3000)
 
-    def delete_trap_in_bonus_screen(self, objects: [Object]):
+    @staticmethod
+    def delete_trap_in_bonus_screen(objects: [Object]):
         for index, object in enumerate(objects):
             if isinstance(object, Trap):
                 objects.pop(index)

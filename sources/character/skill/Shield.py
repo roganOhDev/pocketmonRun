@@ -21,5 +21,5 @@ class Shield(Skill):
 
         self.type = SkillType.TIME
         self.slide_image = slide_image
-        self.time = 5
+        self.time = 2
         self.delay = 10

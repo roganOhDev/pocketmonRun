@@ -19,7 +19,7 @@ class Flame(Skill):
         super().__init__(images, game_time)
 
         self.type = SkillType.TIME
-        self.time = 5
+        self.time = 2
         self.delay = 10
         self.slide_image = slide_image
 
