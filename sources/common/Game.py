@@ -290,12 +290,12 @@ class Game:
         pygame.draw.rect(self.background.screen, (102, 102, 255),
                          [300, 20, (screen_width / 2) * self.character.life / 100, 20])
 
-    def bonus_process(self, game_time: float) -> None:
+    def bonus_process(self, game_time: float, objects: [Object]):
         if self.character.bonus_status.bonus_eat_count == 5:
             self.bonus_stage_start_time = game_time
             self.character.bonus_status.bonus_eat_count = 6
             self.is_default_stage = False
-            self.background.show_bonus_screen()
+            self.background.show_bonus_screen(objects)
 
         elif self.character.bonus_status.bonus_eat_count == 6:
             if game_time - self.bonus_stage_start_time >= 15:

@@ -206,7 +206,7 @@ class Main:
         self.game.character.bonus_status.show_current_bonus_collection(self.game.background.screen)
         self.game.show_score()
         self.game.show_life()
-        self.game.bonus_process(game_time)
+        self.game.bonus_process(game_time, self.objects)
 
         self.boost_process(game_time)
 

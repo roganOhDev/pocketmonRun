@@ -5,10 +5,12 @@ from pygame.mixer import Sound
 from pygame.surface import Surface
 
 from sources.common.Floor import Floor
+from sources.common.Object import Object
 from sources.common.Text import Text
 from sources.game_set import floor_height, screen_width, screen_height
 from sources.images import CharmanderImage, SquirtleImage, BulbasaurImage, BackgroundImage
 from sources.musics import BackgroundMusic
+from sources.trap.Trap import Trap
 
 
 @dataclass
@@ -35,7 +37,9 @@ class Background:
 
         self.bgm.play(loops=3000)
 
-    def show_bonus_screen(self):
+    def show_bonus_screen(self, objects: [Object]):
+        self.delete_trap_in_bonus_screen(objects)
+
         if self.bgm.play().get_busy():
             self.bgm.stop()
 
@@ -45,6 +49,11 @@ class Background:
         self.floors.append(Floor(screen_width))
 
         self.bgm.play(loops=3000)
+
+    def delete_trap_in_bonus_screen(self, objects: [Object]):
+        for index, object in enumerate(objects):
+            if isinstance(object, Trap):
+                objects.pop(index)
 
     def add_text(self, text: Text):
         msg = text.font.render(text.text, True, text.color)
